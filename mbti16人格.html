@@ -1,627 +1,590 @@
-      <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MBTI 16人格</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-    }
-
-    body {
-      background-color: #f5f5f5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .test-container {
-      background-color: #ffffff;
-      border-radius: 24px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
-      padding: 40px 35px;
-      max-width: 760px;
-      width: 100%;
-      border: 1px solid #eaeaea;
-    }
-
-    h1 {
-      font-size: 2.2rem;
-      font-weight: 600;
-      color: #0b2b4a;
-      text-align: center;
-      margin-bottom: 8px;
-      letter-spacing: -0.02em;
-    }
-
-    .subhead {
-      text-align: center;
-      color: #4a5b6b;
-      font-size: 1rem;
-      font-weight: 400;
-      margin-bottom: 24px;
-      border-bottom: 1px solid #e0e0e0;
-      padding-bottom: 18px;
-    }
-
-    .version-tabs {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-    }
-
-    .version-tab {
-      background-color: #f9fafb;
-      border: 1.5px solid #d6dde3;
-      border-radius: 40px;
-      padding: 10px 26px;
-      font-size: 1rem;
-      font-weight: 500;
-      color: #1e3c5a;
-      cursor: pointer;
-      transition: all 0.1s ease;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-    }
-
-    .version-tab:hover {
-      background-color: #ffffff;
-      border-color: #1e3c5a;
-    }
-
-    .version-tab.active {
-      background-color: #1e3c5a;
-      border-color: #1e3c5a;
-      color: #ffffff;
-      font-weight: 500;
-    }
-
-    .version-tab .badge {
-      display: inline-block;
-      background-color: #eef1f4;
-      color: #0b2b4a;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 30px;
-      margin-left: 8px;
-    }
-
-    .version-tab.active .badge {
-      background-color: #ffffff;
-      color: #0b2b4a;
-    }
-
-    .progress-area {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 28px;
-      color: #1e3c5a;
-      font-weight: 500;
-    }
-
-    .question-counter {
-      background-color: #f0f2f4;
-      padding: 6px 14px;
-      border-radius: 30px;
-      font-size: 0.9rem;
-      color: #0b2b4a;
-      border: 1px solid #d6dde3;
-      white-space: nowrap;
-    }
-
-    .progress-bar-bg {
-      flex-grow: 1;
-      height: 8px;
-      background-color: #e9ecef;
-      border-radius: 10px;
-      margin-left: 18px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 8px;
-      background-color: #1e3c5a;
-      width: 0%;
-      border-radius: 10px;
-      transition: width 0.15s ease;
-    }
-
-    .question-text {
-      font-size: 1.5rem;
-      font-weight: 500;
-      color: #0b2b4a;
-      line-height: 1.4;
-      margin-bottom: 32px;
-      min-height: 90px;
-      display: flex;
-      align-items: center;
-      letter-spacing: -0.01em;
-    }
-
-    .options {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 36px;
-    }
-
-    .option-btn {
-      background-color: #f9fafb;
-      border: 1.5px solid #d6dde3;
-      border-radius: 16px;
-      padding: 15px 20px;
-      font-size: 1rem;
-      font-weight: 500;
-      color: #1e3c5a;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.1s ease;
-      display: flex;
-      align-items: center;
-      line-height: 1.4;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-    }
-
-    .option-btn:hover {
-      background-color: #ffffff;
-      border-color: #1e3c5a;
-      box-shadow: 0 4px 12px rgba(0, 20, 40, 0.06);
-    }
-
-    .option-btn.selected {
-      background-color: #ffffff;
-      border-color: #1e3c5a;
-      border-width: 2px;
-      box-shadow: 0 4px 14px rgba(20, 50, 80, 0.1);
-      font-weight: 500;
-    }
-
-    .option-letter {
-      display: inline-block;
-      width: 26px;
-      height: 26px;
-      background-color: #eef1f4;
-      border-radius: 30px;
-      text-align: center;
-      line-height: 26px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #0b2b4a;
-      margin-right: 14px;
-      flex-shrink: 0;
-    }
-
-    .option-btn.selected .option-letter {
-      background-color: #1e3c5a;
-      color: #ffffff;
-    }
-
-    .nav-buttons {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin-top: 8px;
-    }
-
-    .nav-btn {
-      background-color: #ffffff;
-      border: 1.5px solid #d6dde3;
-      border-radius: 40px;
-      padding: 12px 30px;
-      font-size: 1rem;
-      font-weight: 500;
-      color: #1e3c5a;
-      cursor: pointer;
-      transition: all 0.1s ease;
-      letter-spacing: 0.01em;
-    }
-
-    .nav-btn:hover:not(:disabled) {
-      background-color: #f0f4f8;
-      border-color: #1e3c5a;
-    }
-
-    .nav-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-      border-color: #d6dde3;
-    }
-
-    .nav-btn.primary {
-      background-color: #1e3c5a;
-      border-color: #1e3c5a;
-      color: #ffffff;
-    }
-
-    .nav-btn.primary:hover:not(:disabled) {
-      background-color: #0b2b4a;
-      border-color: #0b2b4a;
-    }
-
-    .result-screen {
-      text-align: center;
-      padding: 10px 0 6px;
-    }
-
-    .result-type {
-      font-size: 4.2rem;
-      font-weight: 700;
-      color: #0b2b4a;
-      letter-spacing: 2px;
-      line-height: 1.1;
-      margin-bottom: 18px;
-    }
-
-    .result-title {
-      font-size: 1.7rem;
-      font-weight: 500;
-      color: #1e3c5a;
-      margin-bottom: 14px;
-    }
-
-    .result-desc {
-      font-size: 1rem;
-      color: #3f5567;
-      line-height: 1.7;
-      margin-bottom: 38px;
-      max-width: 540px;
-      margin-left: auto;
-      margin-right: auto;
-      border-top: 1px solid #e0e0e0;
-      padding-top: 24px;
-    }
-
-    .restart-btn {
-      background-color: #ffffff;
-      border: 1.5px solid #1e3c5a;
-      border-radius: 40px;
-      padding: 14px 44px;
-      font-size: 1.1rem;
-      font-weight: 500;
-      color: #1e3c5a;
-      cursor: pointer;
-      transition: all 0.1s ease;
-    }
-
-    .restart-btn:hover {
-      background-color: #1e3c5a;
-      color: #ffffff;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    @media (max-width: 560px) {
-      .test-container {
-        padding: 28px 20px;
-      }
-      .question-text {
-        font-size: 1.25rem;
-        min-height: 70px;
-      }
-      .option-btn {
-        padding: 13px 16px;
-        font-size: 0.95rem;
-      }
-      .result-type {
-        font-size: 3rem;
-      }
-      .version-tab {
-        padding: 8px 18px;
-        font-size: 0.9rem;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBTI 16人格 · 三阶深度测试</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif; }
+  body { background:#f5f5f5; display:flex; justify-content:center; align-items:flex-start; min-height:100vh; padding:20px; }
+  .test-container { background:#fff; border-radius:24px; box-shadow:0 8px 30px rgba(0,0,0,0.05); padding:40px 35px; max-width:800px; width:100%; border:1px solid #eaeaea; }
+  h1 { font-size:2.2rem; font-weight:600; color:#0b2b4a; text-align:center; margin-bottom:8px; letter-spacing:-0.02em; }
+  .subhead { text-align:center; color:#4a5b6b; font-size:1rem; margin-bottom:24px; border-bottom:1px solid #e0e0e0; padding-bottom:18px; }
+  .version-tabs { display:flex; justify-content:center; gap:12px; margin-bottom:28px; flex-wrap:wrap; }
+  .version-tab { background:#f9fafb; border:1.5px solid #d6dde3; border-radius:40px; padding:10px 26px; font-size:1rem; font-weight:500; color:#1e3c5a; cursor:pointer; transition:all .1s ease; }
+  .version-tab:hover { background:#fff; border-color:#1e3c5a; }
+  .version-tab.active { background:#1e3c5a; border-color:#1e3c5a; color:#fff; }
+  .version-tab .badge { display:inline-block; background:#eef1f4; color:#0b2b4a; font-size:.75rem; font-weight:600; padding:2px 8px; border-radius:30px; margin-left:8px; }
+  .version-tab.active .badge { background:#fff; color:#0b2b4a; }
+  .progress-area { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; font-weight:500; }
+  .question-counter { background:#f0f2f4; padding:6px 14px; border-radius:30px; font-size:.9rem; color:#0b2b4a; border:1px solid #d6dde3; white-space:nowrap; }
+  .progress-bar-bg { flex-grow:1; height:8px; background:#e9ecef; border-radius:10px; margin-left:18px; overflow:hidden; }
+  .progress-fill { height:8px; background:#1e3c5a; width:0%; border-radius:10px; transition:width .15s ease; }
+  .question-text { font-size:1.4rem; font-weight:500; color:#0b2b4a; line-height:1.45; margin-bottom:30px; min-height:80px; display:flex; align-items:center; }
+  .options { display:flex; flex-direction:column; gap:12px; margin-bottom:34px; }
+  .option-btn { background:#f9fafb; border:1.5px solid #d6dde3; border-radius:16px; padding:15px 20px; font-size:1rem; font-weight:500; color:#1e3c5a; text-align:left; cursor:pointer; transition:all .1s ease; display:flex; align-items:flex-start; line-height:1.45; }
+  .option-btn:hover { background:#fff; border-color:#1e3c5a; box-shadow:0 4px 12px rgba(0,20,40,.06); }
+  .option-btn.selected { background:#fff; border-color:#1e3c5a; border-width:2px; box-shadow:0 4px 14px rgba(20,50,80,.1); }
+  .option-letter { display:inline-block; width:26px; height:26px; background:#eef1f4; border-radius:30px; text-align:center; line-height:26px; font-size:.85rem; font-weight:600; color:#0b2b4a; margin-right:14px; flex-shrink:0; margin-top:1px; }
+  .option-btn.selected .option-letter { background:#1e3c5a; color:#fff; }
+  .nav-buttons { display:flex; justify-content:space-between; gap:16px; }
+  .nav-btn { background:#fff; border:1.5px solid #d6dde3; border-radius:40px; padding:12px 30px; font-size:1rem; font-weight:500; color:#1e3c5a; cursor:pointer; transition:all .1s ease; }
+  .nav-btn:hover:not(:disabled) { background:#f0f4f8; border-color:#1e3c5a; }
+  .nav-btn:disabled { opacity:.4; cursor:not-allowed; }
+  .nav-btn.primary { background:#1e3c5a; border-color:#1e3c5a; color:#fff; }
+  .nav-btn.primary:hover:not(:disabled) { background:#0b2b4a; border-color:#0b2b4a; }
+  .result-screen { padding:10px 0 6px; }
+  .result-header { text-align:center; margin-bottom:8px; }
+  .result-type { font-size:4.2rem; font-weight:700; color:#0b2b4a; letter-spacing:2px; line-height:1.1; margin-bottom:10px; }
+  .result-title { font-size:1.8rem; font-weight:500; color:#1e3c5a; margin-bottom:6px; }
+  .result-tagline { font-size:1rem; color:#4a5b6b; margin-bottom:22px; }
+  .dims-bar { display:flex; flex-direction:column; gap:12px; background:#f9fafb; border:1px solid #eaeaea; border-radius:18px; padding:20px 24px; margin-bottom:28px; }
+  .dim-row { display:flex; align-items:center; gap:12px; font-size:.9rem; color:#1e3c5a; }
+  .dim-label { width:60px; font-weight:600; color:#0b2b4a; text-align:center; font-size:.85rem; }
+  .dim-track { flex-grow:1; height:22px; background:#e9ecef; border-radius:20px; overflow:hidden; display:flex; }
+  .dim-fill-left { height:100%; background:#1e3c5a; }
+  .dim-fill-right { height:100%; background:#b0c4d4; }
+  .dim-pct { width:44px; text-align:right; font-weight:500; color:#1e3c5a; font-size:.85rem; }
+  .result-desc { font-size:1rem; color:#3f5567; line-height:1.8; margin-bottom:28px; border-top:1px solid #e0e0e0; padding-top:26px; }
+  .result-desc p { margin-bottom:16px; }
+  .result-desc h3 { font-size:1.1rem; color:#0b2b4a; margin:22px 0 10px; font-weight:600; }
+  .result-desc ul { padding-left:20px; margin-bottom:16px; }
+  .result-desc li { margin-bottom:8px; }
+  .result-actions { display:flex; justify-content:center; gap:14px; flex-wrap:wrap; }
+  .restart-btn { background:#fff; border:1.5px solid #1e3c5a; border-radius:40px; padding:14px 40px; font-size:1.05rem; font-weight:500; color:#1e3c5a; cursor:pointer; transition:all .1s ease; }
+  .restart-btn:hover { background:#1e3c5a; color:#fff; }
+  .history-toggle { background:#f9fafb; border:1.5px solid #d6dde3; border-radius:40px; padding:12px 26px; font-size:.95rem; font-weight:500; color:#1e3c5a; cursor:pointer; transition:all .1s ease; }
+  .history-toggle:hover { background:#fff; border-color:#1e3c5a; }
+  .history-section { margin-top:28px; border-top:1px solid #e0e0e0; padding-top:22px; }
+  .history-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; color:#0b2b4a; font-weight:600; font-size:1.05rem; }
+  .history-clear { background:none; border:none; color:#4a5b6b; font-size:.85rem; cursor:pointer; text-decoration:underline; }
+  .history-list { display:flex; flex-direction:column; gap:10px; max-height:280px; overflow-y:auto; }
+  .history-item { background:#f9fafb; border:1px solid #eaeaea; border-radius:14px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+  .history-item .h-type { font-weight:700; color:#0b2b4a; font-size:1rem; }
+  .history-item .h-meta { font-size:.8rem; color:#6b7d8f; }
+  .history-empty { color:#8a9aa8; font-size:.9rem; padding:8px 0; }
+  .hidden { display:none; }
+  @media (max-width:560px) {
+    .test-container { padding:28px 20px; }
+    .question-text { font-size:1.15rem; }
+    .option-btn { padding:13px 16px; font-size:.95rem; }
+    .result-type { font-size:3rem; }
+  }
+</style>
 </head>
 <body>
+<div class="test-container">
+  <h1>MBTI · 人格倾向</h1>
+  <div class="subhead">16型人格 · 三阶深度探索</div>
 
-  <div class="test-container">
-    <h1>MBTI · 人格倾向</h1>
-    <div class="subhead">16型人格 · 三阶自我探索</div>
+  <div class="version-tabs">
+    <button class="version-tab active" data-version="40">极简版 <span class="badge">40题</span></button>
+    <button class="version-tab" data-version="100">普通版 <span class="badge">100题</span></button>
+    <button class="version-tab" data-version="200">深度思考版 <span class="badge">200题</span></button>
+  </div>
 
-    <div class="version-tabs">
-      <button class="version-tab active" data-version="40">极简版 <span class="badge">40题</span></button>
-      <button class="version-tab" data-version="100">普通版 <span class="badge">100题</span></button>
-      <button class="version-tab" data-version="200">深度思考版 <span class="badge">200题</span></button>
+  <div id="quizArea">
+    <div class="progress-area">
+      <span class="question-counter" id="counter">1 / 40</span>
+      <div class="progress-bar-bg"><div class="progress-fill" id="progressFill" style="width:0%;"></div></div>
     </div>
-
-    <div id="quizArea">
-      <div class="progress-area">
-        <span class="question-counter" id="counter">1 / 40</span>
-        <div class="progress-bar-bg">
-          <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
-        </div>
-      </div>
-
-      <div class="question-text" id="questionText">正在加载...</div>
-
-      <div class="options" id="optionsContainer"></div>
-
-      <div class="nav-buttons">
-        <button class="nav-btn" id="prevBtn" disabled>上一题</button>
-        <button class="nav-btn primary" id="nextBtn">下一题</button>
-      </div>
-    </div>
-
-    <div id="resultArea" class="result-screen hidden">
-      <div class="result-type" id="resultType">INFP</div>
-      <div class="result-title" id="resultTitle">调停者</div>
-      <div class="result-desc" id="resultDesc"></div>
-      <button class="restart-btn" id="restartBtn">重新测试</button>
+    <div class="question-text" id="questionText">正在加载...</div>
+    <div class="options" id="optionsContainer"></div>
+    <div class="nav-buttons">
+      <button class="nav-btn" id="prevBtn" disabled>上一题</button>
+      <button class="nav-btn primary" id="nextBtn">下一题</button>
     </div>
   </div>
 
-  <script>
-    (function() {
-      const baseQuestions = [
-        { text: "在聚会中，你更倾向于：", options: [{ label: "主动认识很多人，享受热闹", value: "E" }, { label: "和几个熟人深入聊天", value: "I" }, { label: "观察大家，偶尔加入话题", value: "I" }, { label: "成为焦点，带动气氛", value: "E" }] },
-        { text: "面对一个新项目，你首先：", options: [{ label: "立刻动手，边做边调整", value: "S" }, { label: "先规划整体框架和可能性", value: "N" }, { label: "参考过往经验，按流程推进", value: "S" }, { label: "构思多种创意方案", value: "N" }] },
-        { text: "做决定时，你更看重：", options: [{ label: "逻辑分析和客观事实", value: "T" }, { label: "个人感受和对他人的影响", value: "F" }, { label: "公平的规则和效率", value: "T" }, { label: "人情世故和和谐关系", value: "F" }] },
-        { text: "你的日常安排更接近：", options: [{ label: "有计划、按部就班", value: "J" }, { label: "灵活随意、随性而发", value: "P" }, { label: "有大致框架，细节灵活", value: "J" }, { label: "走到哪算哪，享受随机", value: "P" }] },
-        { text: "当你要充电时，你更喜欢：", options: [{ label: "出门走走，和朋友相聚", value: "E" }, { label: "独自待着，安静地看书", value: "I" }, { label: "参加集体活动，感受氛围", value: "E" }, { label: "一个人散步或听音乐", value: "I" }] },
-        { text: "你更容易注意到：", options: [{ label: "具体的细节和现实情况", value: "S" }, { label: "隐藏的模式和未来的可能", value: "N" }, { label: "当下的实际问题和解决方式", value: "S" }, { label: "事物背后的深层含义", value: "N" }] },
-        { text: "面对冲突，你通常：", options: [{ label: "直接指出问题，就事论事", value: "T" }, { label: "考虑对方情绪，尽量温和", value: "F" }, { label: "用事实和逻辑说服对方", value: "T" }, { label: "先安抚情绪再沟通", value: "F" }] },
-        { text: "你的书桌/工作空间通常：", options: [{ label: "井井有条，物品分类清晰", value: "J" }, { label: "看起来有点乱，但自己找得到", value: "P" }, { label: "文件按项目归档", value: "J" }, { label: "东西随手放，需要时再翻", value: "P" }] },
-        { text: "你更享受哪种对话？", options: [{ label: "关于现实生活、具体经验", value: "S" }, { label: "关于抽象概念、未来设想", value: "N" }, { label: "探讨实际操作和步骤", value: "S" }, { label: "聊理想、哲学和可能性", value: "N" }] },
-        { text: "你更认同哪句话？", options: [{ label: "情感是决策中不可忽视的因素", value: "F" }, { label: "公平的规则比个人感受更重要", value: "T" }, { label: "理解他人的感受是首要的", value: "F" }, { label: "逻辑一致才是解决问题的关键", value: "T" }] },
-        { text: "旅行前，你通常会：", options: [{ label: "做好详细攻略，安排好行程", value: "J" }, { label: "订好机票住宿，其他随缘", value: "P" }, { label: "列出必去景点和时间表", value: "J" }, { label: "到了再说，享受即兴探索", value: "P" }] },
-        { text: "你觉得自己更偏向：", options: [{ label: "在人群中获得能量", value: "E" }, { label: "在独处中恢复精力", value: "I" }, { label: "喜欢热闹，但也需要独处", value: "E" }, { label: "社交后需要长时间安静", value: "I" }] },
-        { text: "你更容易记住：", options: [{ label: "具体的数字和事实", value: "S" }, { label: "整体的印象和感觉", value: "N" }, { label: "事件的细节和经过", value: "S" }, { label: "事情带来的启发和意义", value: "N" }] },
-        { text: "当朋友向你倾诉时，你倾向于：", options: [{ label: "帮他分析问题，给出方案", value: "T" }, { label: "先共情，让他感到被理解", value: "F" }, { label: "指出问题所在，理性建议", value: "T" }, { label: "耐心倾听，给予情感支持", value: "F" }] },
-        { text: "你更喜欢哪种工作环境？", options: [{ label: "有明确的流程和截止日期", value: "J" }, { label: "弹性工作，自由安排", value: "P" }, { label: "结构清晰，职责分明", value: "J" }, { label: "灵活多变，鼓励即兴", value: "P" }] },
-        { text: "在社交场合，你通常：", options: [{ label: "主动和陌生人打开话匣", value: "E" }, { label: "等别人来和你搭话", value: "I" }, { label: "很快融入群体，谈笑风生", value: "E" }, { label: "和少数人深入交流", value: "I" }] },
-        { text: "你更倾向于相信：", options: [{ label: "眼见为实，经验可靠", value: "S" }, { label: "直觉和灵感带来的启发", value: "N" }, { label: "经过验证的事实", value: "S" }, { label: "内心的预感与洞见", value: "N" }] },
-        { text: "你更看重一个人的：", options: [{ label: "能力和逻辑清晰度", value: "T" }, { label: "善良和情感细腻度", value: "F" }, { label: "公正和原则性", value: "T" }, { label: "同理心和包容度", value: "F" }] },
-        { text: "对于未完成的任务，你：", options: [{ label: "感到不安，想尽快完成", value: "J" }, { label: "觉得可以灵活处理，不着急", value: "P" }, { label: "会制定计划逐步完成", value: "J" }, { label: "先放一放，等状态好了再做", value: "P" }] },
-        { text: "你更常：", options: [{ label: "先行动，再思考", value: "E" }, { label: "先思考，再行动", value: "I" }, { label: "边做边说，享受互动", value: "E" }, { label: "想清楚再表达", value: "I" }] },
-        { text: "你更容易被什么说服？", options: [{ label: "数据和案例", value: "S" }, { label: "理念和愿景", value: "N" }, { label: "真实发生的事例", value: "S" }, { label: "富有想象力的蓝图", value: "N" }] },
-        { text: "你更愿意成为：", options: [{ label: "公正的裁判", value: "T" }, { label: "温暖的倾听者", value: "F" }, { label: "客观的分析者", value: "T" }, { label: "贴心的支持者", value: "F" }] },
-        { text: "你更喜欢做：", options: [{ label: "已经知道怎么做的事", value: "J" }, { label: "需要即兴发挥的事", value: "P" }, { label: "有明确步骤的任务", value: "J" }, { label: "充满变数的挑战", value: "P" }] },
-        { text: "独处时，你感到：", options: [{ label: "有时无聊，想找人说话", value: "E" }, { label: "非常自在，享受安静", value: "I" }, { label: "过一会儿就想联系朋友", value: "E" }, { label: "觉得是宝贵的休息时间", value: "I" }] },
-        { text: "你更关注：", options: [{ label: "当下正在发生的事", value: "S" }, { label: "未来可能发生的事", value: "N" }, { label: "眼前的实际问题", value: "S" }, { label: "长远的发展趋势", value: "N" }] },
-        { text: "当团队出现分歧，你更倾向于：", options: [{ label: "提出一个最理性的方案", value: "T" }, { label: "协调各方情绪，达成共识", value: "F" }, { label: "分析利弊，选出最优解", value: "T" }, { label: "照顾每个人的感受", value: "F" }] },
-        { text: "你更习惯：", options: [{ label: "提前做好计划", value: "J" }, { label: "随机应变", value: "P" }, { label: "列出待办事项清单", value: "J" }, { label: "根据当天状态调整", value: "P" }] },
-        { text: "你更愿意：", options: [{ label: "在热闹中寻找乐趣", value: "E" }, { label: "在安静中寻找深度", value: "I" }, { label: "参加聚会拓展人脉", value: "E" }, { label: "一个人读书或思考", value: "I" }] },
-        { text: "你更相信：", options: [{ label: "实践出真知", value: "S" }, { label: "想象力驱动世界", value: "N" }, { label: "亲身经历最可靠", value: "S" }, { label: "灵感比经验更重要", value: "N" }] },
-        { text: "你认为更重要的是：", options: [{ label: "公平", value: "T" }, { label: "仁慈", value: "F" }, { label: "规则面前人人平等", value: "T" }, { label: "体谅每个人的难处", value: "F" }] },
-        { text: "你更享受：", options: [{ label: "完成一个长期计划", value: "J" }, { label: "探索多个新的可能", value: "P" }, { label: "按部就班推进目标", value: "J" }, { label: "同时尝试不同方向", value: "P" }] },
-        { text: "你更容易：", options: [{ label: "在人群中感到兴奋", value: "E" }, { label: "在独处中恢复精力", value: "I" }, { label: "通过交流理清思路", value: "E" }, { label: "通过沉思获得答案", value: "I" }] },
-        { text: "你更依赖：", options: [{ label: "经验和事实", value: "S" }, { label: "灵感和直觉", value: "N" }, { label: "过去成功的做法", value: "S" }, { label: "内心的指引", value: "N" }] },
-        { text: "你更看重：", options: [{ label: "逻辑的严密性", value: "T" }, { label: "情感的真诚性", value: "F" }, { label: "论证是否合理", value: "T" }, { label: "是否发自内心", value: "F" }] },
-        { text: "你更倾向于：", options: [{ label: "按计划行事", value: "J" }, { label: "保持开放选项", value: "P" }, { label: "提前确定目标", value: "J" }, { label: "走一步看一步", value: "P" }] },
-        { text: "你更喜欢：", options: [{ label: "成为焦点", value: "E" }, { label: "做幕后的支持者", value: "I" }, { label: "在台前表达观点", value: "E" }, { label: "在背后默默付出", value: "I" }] },
-        { text: "你更容易注意到：", options: [{ label: "事物的实际用途", value: "S" }, { label: "事物背后的意义", value: "N" }, { label: "具体的使用方法", value: "S" }, { label: "象征和隐喻", value: "N" }] },
-        { text: "你更愿意：", options: [{ label: "用逻辑说服别人", value: "T" }, { label: "用情感打动别人", value: "F" }, { label: "摆事实讲道理", value: "T" }, { label: "讲故事引发共鸣", value: "F" }] },
-        { text: "你更享受：", options: [{ label: "按部就班的稳定", value: "J" }, { label: "灵活多变的自由", value: "P" }, { label: "清晰的规则和节奏", value: "J" }, { label: "随性的节奏和空间", value: "P" }] },
-        { text: "你更认同：", options: [{ label: "行动胜于言语", value: "E" }, { label: "思考胜于行动", value: "I" }, { label: "多交流才能碰撞火花", value: "E" }, { label: "安静思考才能深入", value: "I" }] }
-      ];
+  <div id="resultArea" class="result-screen hidden">
+    <div class="result-header">
+      <div class="result-type" id="resultType">INFP</div>
+      <div class="result-title" id="resultTitle">调停者</div>
+      <div class="result-tagline" id="resultTagline"></div>
+    </div>
+    <div class="dims-bar" id="dimsBar"></div>
+    <div class="result-desc" id="resultDesc"></div>
+    <div class="result-actions">
+      <button class="restart-btn" id="restartBtn">重新测试</button>
+      <button class="history-toggle" id="historyToggle">历史记录</button>
+    </div>
+    <div class="history-section hidden" id="historySection">
+      <div class="history-header"><span>测试历史</span><button class="history-clear" id="historyClear">清空</button></div>
+      <div class="history-list" id="historyList"></div>
+    </div>
+  </div>
+</div>
 
-      const typeDescriptions = {
-        INTJ: { title: "建筑师", desc: "富有想象力和战略性的思想家，一切皆在计划之中。独立、理性，善于洞察复杂系统的运作方式。" },
-        INTP: { title: "逻辑学家", desc: "具有创造力的发明家，对知识有着止不住的渴望。喜欢分析问题，探索事物背后的原理。" },
-        ENTJ: { title: "指挥官", desc: "大胆、富有想象力且意志强大的领导者，总能找到或创造解决方法。天生具有组织才能。" },
-        ENTP: { title: "辩论家", desc: "聪明好奇的思想者，不会放弃任何智力上的挑战。喜欢新观念，擅长即兴发挥。" },
-        INFJ: { title: "提倡者", desc: "安静而神秘，同时鼓舞人心且不知疲倦的理想主义者。有强烈的价值观，致力于帮助他人。" },
-        INFP: { title: "调停者", desc: "诗意、善良的利他主义者，总是热情地为正当理由提供帮助。内心丰富，重视真实与和谐。" },
-        ENFJ: { title: "主人公", desc: "富有魅力、鼓舞人心的领导者，有使听众着迷的能力。善于理解他人，追求共同成长。" },
-        ENFP: { title: "竞选者", desc: "热情、有创造力、爱社交的自由灵魂，总能找到理由微笑。好奇心强，乐于探索新可能。" },
-        ISTJ: { title: "物流师", desc: "实际且注重事实的个人，可靠性不容怀疑。喜欢秩序，尊重规则，做事有条不紊。" },
-        ISFJ: { title: "守卫者", desc: "非常专注而温暖的守护者，时刻准备着保护爱着的人们。细心、负责，重视传统。" },
-        ESTJ: { title: "总经理", desc: "出色的管理者，在管理事情或人方面无与伦比。务实、果断，重视效率与结构。" },
-        ESFJ: { title: "执政官", desc: "极有同情心、爱交际、受欢迎的人们，总是热心提供帮助。重视和谐，乐于服务他人。" },
-        ISTP: { title: "鉴赏家", desc: "大胆而实际的实验家，擅长使用任何形式的工具。冷静灵活，喜欢通过实践解决问题。" },
-        ISFP: { title: "探险家", desc: "灵活有魅力的艺术家，时刻准备着探索和体验新鲜事物。温柔敏感，活在当下。" },
-        ESTP: { title: "企业家", desc: "聪明、精力充沛、善于感知的人，真心享受生活在边缘。行动派，擅长应对挑战。" },
-        ESFP: { title: "表演者", desc: "自发的、精力充沛而热情的表演者——生活在他们周围永不无聊。热爱生活，感染力强。" }
-      };
+<script>
+(function(){
+  const SIMPLE_BASE = [
+    { text: "在聚会中，你更倾向于：", options: [{ label: "主动认识很多人，享受热闹", value: "E" }, { label: "和几个熟人深入聊天", value: "I" }, { label: "观察大家，偶尔加入话题", value: "I" }, { label: "成为焦点，带动气氛", value: "E" }] },
+    { text: "面对一个新项目，你首先：", options: [{ label: "立刻动手，边做边调整", value: "S" }, { label: "先规划整体框架和可能性", value: "N" }, { label: "参考过往经验，按流程推进", value: "S" }, { label: "构思多种创意方案", value: "N" }] },
+    { text: "做决定时，你更看重：", options: [{ label: "逻辑分析和客观事实", value: "T" }, { label: "个人感受和对他人的影响", value: "F" }, { label: "公平的规则和效率", value: "T" }, { label: "人情世故和和谐关系", value: "F" }] },
+    { text: "你的日常安排更接近：", options: [{ label: "有计划、按部就班", value: "J" }, { label: "灵活随意、随性而发", value: "P" }, { label: "有大致框架，细节灵活", value: "J" }, { label: "走到哪算哪，享受随机", value: "P" }] },
+    { text: "当你要充电时，你更喜欢：", options: [{ label: "出门走走，和朋友相聚", value: "E" }, { label: "独自待着，安静地看书", value: "I" }, { label: "参加集体活动，感受氛围", value: "E" }, { label: "一个人散步或听音乐", value: "I" }] },
+    { text: "你更容易注意到：", options: [{ label: "具体的细节和现实情况", value: "S" }, { label: "隐藏的模式和未来的可能", value: "N" }, { label: "当下的实际问题和解决方式", value: "S" }, { label: "事物背后的深层含义", value: "N" }] },
+    { text: "面对冲突，你通常：", options: [{ label: "直接指出问题，就事论事", value: "T" }, { label: "考虑对方情绪，尽量温和", value: "F" }, { label: "用事实和逻辑说服对方", value: "T" }, { label: "先安抚情绪再沟通", value: "F" }] },
+    { text: "你的书桌/工作空间通常：", options: [{ label: "井井有条，物品分类清晰", value: "J" }, { label: "看起来有点乱，但自己找得到", value: "P" }, { label: "文件按项目归档", value: "J" }, { label: "东西随手放，需要时再翻", value: "P" }] },
+    { text: "你更享受哪种对话？", options: [{ label: "关于现实生活、具体经验", value: "S" }, { label: "关于抽象概念、未来设想", value: "N" }, { label: "探讨实际操作和步骤", value: "S" }, { label: "聊理想、哲学和可能性", value: "N" }] },
+    { text: "你更认同哪句话？", options: [{ label: "情感是决策中不可忽视的因素", value: "F" }, { label: "公平的规则比个人感受更重要", value: "T" }, { label: "理解他人的感受是首要的", value: "F" }, { label: "逻辑一致才是解决问题的关键", value: "T" }] },
+    { text: "旅行前，你通常会：", options: [{ label: "做好详细攻略，安排好行程", value: "J" }, { label: "订好机票住宿，其他随缘", value: "P" }, { label: "列出必去景点和时间表", value: "J" }, { label: "到了再说，享受即兴探索", value: "P" }] },
+    { text: "你觉得自己更偏向：", options: [{ label: "在人群中获得能量", value: "E" }, { label: "在独处中恢复精力", value: "I" }, { label: "喜欢热闹，但也需要独处", value: "E" }, { label: "社交后需要长时间安静", value: "I" }] },
+    { text: "你更容易记住：", options: [{ label: "具体的数字和事实", value: "S" }, { label: "整体的印象和感觉", value: "N" }, { label: "事件的细节和经过", value: "S" }, { label: "事情带来的启发和意义", value: "N" }] },
+    { text: "当朋友向你倾诉时，你倾向于：", options: [{ label: "帮他分析问题，给出方案", value: "T" }, { label: "先共情，让他感到被理解", value: "F" }, { label: "指出问题所在，理性建议", value: "T" }, { label: "耐心倾听，给予情感支持", value: "F" }] },
+    { text: "你更喜欢哪种工作环境？", options: [{ label: "有明确的流程和截止日期", value: "J" }, { label: "弹性工作，自由安排", value: "P" }, { label: "结构清晰，职责分明", value: "J" }, { label: "灵活多变，鼓励即兴", value: "P" }] },
+    { text: "在社交场合，你通常：", options: [{ label: "主动和陌生人打开话匣", value: "E" }, { label: "等别人来和你搭话", value: "I" }, { label: "很快融入群体，谈笑风生", value: "E" }, { label: "和少数人深入交流", value: "I" }] },
+    { text: "你更倾向于相信：", options: [{ label: "眼见为实，经验可靠", value: "S" }, { label: "直觉和灵感带来的启发", value: "N" }, { label: "经过验证的事实", value: "S" }, { label: "内心的预感与洞见", value: "N" }] },
+    { text: "你更看重一个人的：", options: [{ label: "能力和逻辑清晰度", value: "T" }, { label: "善良和情感细腻度", value: "F" }, { label: "公正和原则性", value: "T" }, { label: "同理心和包容度", value: "F" }] },
+    { text: "对于未完成的任务，你：", options: [{ label: "感到不安，想尽快完成", value: "J" }, { label: "觉得可以灵活处理，不着急", value: "P" }, { label: "会制定计划逐步完成", value: "J" }, { label: "先放一放，等状态好了再做", value: "P" }] },
+    { text: "你更常：", options: [{ label: "先行动，再思考", value: "E" }, { label: "先思考，再行动", value: "I" }, { label: "边做边说，享受互动", value: "E" }, { label: "想清楚再表达", value: "I" }] },
+    { text: "你更容易被什么说服？", options: [{ label: "数据和案例", value: "S" }, { label: "理念和愿景", value: "N" }, { label: "真实发生的事例", value: "S" }, { label: "富有想象力的蓝图", value: "N" }] },
+    { text: "你更愿意成为：", options: [{ label: "公正的裁判", value: "T" }, { label: "温暖的倾听者", value: "F" }, { label: "客观的分析者", value: "T" }, { label: "贴心的支持者", value: "F" }] },
+    { text: "你更喜欢做：", options: [{ label: "已经知道怎么做的事", value: "J" }, { label: "需要即兴发挥的事", value: "P" }, { label: "有明确步骤的任务", value: "J" }, { label: "充满变数的挑战", value: "P" }] },
+    { text: "独处时，你感到：", options: [{ label: "有时无聊，想找人说话", value: "E" }, { label: "非常自在，享受安静", value: "I" }, { label: "过一会儿就想联系朋友", value: "E" }, { label: "觉得是宝贵的休息时间", value: "I" }] },
+    { text: "你更关注：", options: [{ label: "当下正在发生的事", value: "S" }, { label: "未来可能发生的事", value: "N" }, { label: "眼前的实际问题", value: "S" }, { label: "长远的发展趋势", value: "N" }] },
+    { text: "当团队出现分歧，你更倾向于：", options: [{ label: "提出一个最理性的方案", value: "T" }, { label: "协调各方情绪，达成共识", value: "F" }, { label: "分析利弊，选出最优解", value: "T" }, { label: "照顾每个人的感受", value: "F" }] },
+    { text: "你更习惯：", options: [{ label: "提前做好计划", value: "J" }, { label: "随机应变", value: "P" }, { label: "列出待办事项清单", value: "J" }, { label: "根据当天状态调整", value: "P" }] },
+    { text: "你更愿意：", options: [{ label: "在热闹中寻找乐趣", value: "E" }, { label: "在安静中寻找深度", value: "I" }, { label: "参加聚会拓展人脉", value: "E" }, { label: "一个人读书或思考", value: "I" }] },
+    { text: "你更相信：", options: [{ label: "实践出真知", value: "S" }, { label: "想象力驱动世界", value: "N" }, { label: "亲身经历最可靠", value: "S" }, { label: "灵感比经验更重要", value: "N" }] },
+    { text: "你认为更重要的是：", options: [{ label: "公平", value: "T" }, { label: "仁慈", value: "F" }, { label: "规则面前人人平等", value: "T" }, { label: "体谅每个人的难处", value: "F" }] },
+    { text: "你更享受：", options: [{ label: "完成一个长期计划", value: "J" }, { label: "探索多个新的可能", value: "P" }, { label: "按部就班推进目标", value: "J" }, { label: "同时尝试不同方向", value: "P" }] },
+    { text: "你更容易：", options: [{ label: "在人群中感到兴奋", value: "E" }, { label: "在独处中恢复精力", value: "I" }, { label: "通过交流理清思路", value: "E" }, { label: "通过沉思获得答案", value: "I" }] },
+    { text: "你更依赖：", options: [{ label: "经验和事实", value: "S" }, { label: "灵感和直觉", value: "N" }, { label: "过去成功的做法", value: "S" }, { label: "内心的指引", value: "N" }] },
+    { text: "你更看重：", options: [{ label: "逻辑的严密性", value: "T" }, { label: "情感的真诚性", value: "F" }, { label: "论证是否合理", value: "T" }, { label: "是否发自内心", value: "F" }] },
+    { text: "你更倾向于：", options: [{ label: "按计划行事", value: "J" }, { label: "保持开放选项", value: "P" }, { label: "提前确定目标", value: "J" }, { label: "走一步看一步", value: "P" }] },
+    { text: "你更喜欢：", options: [{ label: "成为焦点", value: "E" }, { label: "做幕后的支持者", value: "I" }, { label: "在台前表达观点", value: "E" }, { label: "在背后默默付出", value: "I" }] },
+    { text: "你更容易注意到：", options: [{ label: "事物的实际用途", value: "S" }, { label: "事物背后的意义", value: "N" }, { label: "具体的使用方法", value: "S" }, { label: "象征和隐喻", value: "N" }] },
+    { text: "你更愿意：", options: [{ label: "用逻辑说服别人", value: "T" }, { label: "用情感打动别人", value: "F" }, { label: "摆事实讲道理", value: "T" }, { label: "讲故事引发共鸣", value: "F" }] },
+    { text: "你更享受：", options: [{ label: "按部就班的稳定", value: "J" }, { label: "灵活多变的自由", value: "P" }, { label: "清晰的规则和节奏", value: "J" }, { label: "随性的节奏和空间", value: "P" }] },
+    { text: "你更认同：", options: [{ label: "行动胜于言语", value: "E" }, { label: "思考胜于行动", value: "I" }, { label: "多交流才能碰撞火花", value: "E" }, { label: "安静思考才能深入", value: "I" }] }
+  ];
 
-      function buildQuestionPool(targetCount) {
-        const pool = [];
-        const baseLen = baseQuestions.length;
-        for (let i = 0; i < targetCount; i++) {
-          const q = baseQuestions[i % baseLen];
-          const round = Math.floor(i / baseLen);
-          let text = q.text;
-          if (round === 1) {
-            text = q.text.replace("你", "你通常") + "（情境B）";
-          } else if (round === 2) {
-            text = "换个角度：" + q.text.replace("你", "你大部分时候") + "（情境C）";
-          } else if (round === 3) {
-            text = "深入思考：" + q.text.replace("你", "你内心深处") + "（情境D）";
-          } else if (round === 4) {
-            text = "再次确认：" + q.text.replace("你", "你本能地") + "（情境E）";
-          } else if (round > 4) {
-            text = q.text.replace("你", "在类似情境下，你") + "（第" + (round + 1) + "轮）";
-          }
-          const newQ = {
-            text: text,
-            options: q.options.map(opt => ({ label: opt.label, value: opt.value }))
-          };
-          pool.push(newQ);
-        }
-        return pool;
+  const NORMAL_BASE = [
+    { text: "周末朋友临时约你出门，你的第一反应是：", options: [{ label: "欣然答应，正好想出去走走", value: "E" }, { label: "有点犹豫，更想按原计划休息", value: "I" }, { label: "看心情，可能去也可能不去", value: "P" }, { label: "先问清楚有哪些人再决定", value: "I" }] },
+    { text: "学习一项新技能时，你更喜欢：", options: [{ label: "直接上手操作，从错误中学习", value: "S" }, { label: "先看教程，理解整体逻辑再动手", value: "N" }, { label: "找一个已经会的人带带你", value: "E" }, { label: "自己摸索，不按常规出牌", value: "N" }] },
+    { text: "在团队讨论中，你更常扮演：", options: [{ label: "提出新点子的人", value: "N" }, { label: "分析可行性的人", value: "T" }, { label: "协调气氛的人", value: "F" }, { label: "推进时间进度的人", value: "J" }] },
+    { text: "你更愿意把周末花在：", options: [{ label: "和朋友聚会，热闹一场", value: "E" }, { label: "一个人读书、看剧或打游戏", value: "I" }, { label: "参加兴趣小组，认识同好", value: "E" }, { label: "整理房间、处理琐事", value: "J" }] },
+    { text: "面对一份枯燥但稳定的工作，你会：", options: [{ label: "接受它，稳定最重要", value: "S" }, { label: "思考有没有更高效的做法", value: "T" }, { label: "担心自己会失去热情", value: "F" }, { label: "寻找机会改变现状", value: "N" }] },
+    { text: "你更相信：", options: [{ label: "过去的经验能指导未来", value: "S" }, { label: "未来充满无限可能", value: "N" }, { label: "逻辑推理比直觉可靠", value: "T" }, { label: "直觉常常能捕捉真相", value: "F" }] },
+    { text: "当你和好朋友意见不合时，你倾向于：", options: [{ label: "坚持自己的观点，把道理讲清楚", value: "T" }, { label: "先退一步，避免伤了和气", value: "F" }, { label: "先冷静一下，再找机会沟通", value: "I" }, { label: "直接说出来，当场解决", value: "E" }] },
+    { text: "你的房间更可能是：", options: [{ label: "东西分类摆放，一目了然", value: "J" }, { label: "看起来乱但自己心里有数", value: "P" }, { label: "按颜色或主题布置", value: "F" }, { label: "实用为主，能住就行", value: "S" }] },
+    { text: "看一部电影时，你更容易被什么打动？", options: [{ label: "精妙的剧情结构和逻辑", value: "T" }, { label: "人物的情感和命运", value: "F" }, { label: "画面和音效带来的感官冲击", value: "S" }, { label: "影片背后的隐喻和主题", value: "N" }] },
+    { text: "你更倾向于用哪种方式解决问题？", options: [{ label: "列出步骤，逐一执行", value: "J" }, { label: "先试试看，边做边调整", value: "P" }, { label: "找有经验的人请教", value: "S" }, { label: "自己查资料，弄懂原理", value: "N" }] },
+    { text: "在陌生的社交场合，你：", options: [{ label: "主动找人聊天，很快熟络", value: "E" }, { label: "先观察，等别人来找你", value: "I" }, { label: "找到一个聊得来的人深入交流", value: "I" }, { label: "跟着朋友，让他带你认识人", value: "E" }] },
+    { text: "你更看重一份工作的：", options: [{ label: "稳定的收入和保障", value: "S" }, { label: "成长空间和挑战性", value: "N" }, { label: "团队氛围和人际关系", value: "F" }, { label: "规则清晰、职责明确", value: "J" }] },
+    { text: "当你感到压力很大时，你会：", options: [{ label: "找人倾诉，寻求安慰", value: "F" }, { label: "一个人静一静，消化情绪", value: "I" }, { label: "用行动解决问题，不去多想", value: "T" }, { label: "制定计划，把压力分解", value: "J" }] },
+    { text: "你更容易记住一个人的：", options: [{ label: "长相和穿着细节", value: "S" }, { label: "说话时的气质和感觉", value: "N" }, { label: "说过的话和观点", value: "T" }, { label: "对你的态度和情绪", value: "F" }] },
+    { text: "对于突如其来的变化，你通常：", options: [{ label: "觉得有趣，愿意尝试", value: "P" }, { label: "有点不安，想尽快恢复秩序", value: "J" }, { label: "先分析利弊再决定", value: "T" }, { label: "看情况，随大流", value: "S" }] },
+    { text: "你更喜欢的旅行方式是：", options: [{ label: "自由行，走到哪玩到哪", value: "P" }, { label: "跟团，省心省力", value: "J" }, { label: "深度游，了解当地文化", value: "N" }, { label: "打卡热门景点，拍照留念", value: "S" }] },
+    { text: "你更常因为什么而开心？", options: [{ label: "完成了一个目标", value: "J" }, { label: "和喜欢的人在一起", value: "F" }, { label: "发现了一个新想法", value: "N" }, { label: "享受了一顿美食", value: "S" }] },
+    { text: "在小组作业中，你最受不了：", options: [{ label: "有人不按分工完成", value: "J" }, { label: "讨论半天没有结论", value: "T" }, { label: "有人被忽视或受委屈", value: "F" }, { label: "想法太保守没有新意", value: "N" }] },
+    { text: "你更倾向于：", options: [{ label: "同时做几件事，效率更高", value: "E" }, { label: "专注做一件事，做到最好", value: "I" }, { label: "先做紧急的，再做重要的", value: "J" }, { label: "想到哪做到哪", value: "P" }] },
+    { text: "你对“规则”的态度是：", options: [{ label: "规则是为了保障公平，应该遵守", value: "T" }, { label: "规则有时会束缚人，可以灵活变通", value: "P" }, { label: "规则背后要考虑到人的感受", value: "F" }, { label: "有明确规则才让人安心", value: "J" }] },
+    { text: "你更容易被哪种人吸引？", options: [{ label: "聪明、有逻辑的人", value: "T" }, { label: "温暖、善解人意的人", value: "F" }, { label: "有趣、脑洞大的人", value: "N" }, { label: "靠谱、行动力强的人", value: "S" }] },
+    { text: "当你在网上看到一条争议新闻时，你会：", options: [{ label: "先看事实和证据", value: "T" }, { label: "关注当事人的处境和感受", value: "F" }, { label: "思考背后有没有更深层的原因", value: "N" }, { label: "看有没有类似案例可以对照", value: "S" }] },
+    { text: "你更愿意在哪种团队里工作？", options: [{ label: "气氛轻松，大家畅所欲言", value: "E" }, { label: "分工明确，各司其职", value: "J" }, { label: "能不断尝试新方向", value: "N" }, { label: "稳定踏实，少有变动", value: "S" }] },
+    { text: "你更常因为什么而焦虑？", options: [{ label: "计划被打乱", value: "J" }, { label: "和人发生冲突", value: "F" }, { label: "想不通问题的逻辑", value: "T" }, { label: "觉得生活缺少新意", value: "N" }] },
+    { text: "当你需要做重要决定时，你：", options: [{ label: "列出利弊清单，理性比较", value: "T" }, { label: "听听内心声音，哪个更安心", value: "F" }, { label: "参考别人类似的选择", value: "S" }, { label: "想象不同选择带来的未来", value: "N" }] },
+    { text: "你更习惯用什么方式记录生活？", options: [{ label: "拍照、写日记，留下细节", value: "S" }, { label: "在脑海里回味那些瞬间", value: "N" }, { label: "和朋友分享，边聊边记", value: "E" }, { label: "整理成时间线或清单", value: "J" }] },
+    { text: "面对一个你不太喜欢的同事，你会：", options: [{ label: "保持礼貌，维持表面和谐", value: "F" }, { label: "公事公办，不深交", value: "T" }, { label: "尽量避开，少接触", value: "I" }, { label: "试着找到共同话题", value: "E" }] },
+    { text: "你更看重一个方案的：", options: [{ label: "能否解决当前问题", value: "S" }, { label: "有没有长远的价值", value: "N" }, { label: "是否公平合理", value: "T" }, { label: "大家是否都能接受", value: "F" }] },
+    { text: "你更享受哪种周末？", options: [{ label: "安排好行程，充实度过", value: "J" }, { label: "睡到自然醒，随心安排", value: "P" }, { label: "和一大群朋友出去玩", value: "E" }, { label: "一个人做喜欢的事", value: "I" }] },
+    { text: "当别人向你请教问题时，你更愿意：", options: [{ label: "直接给出答案和方法", value: "S" }, { label: "引导他自己找到答案", value: "N" }, { label: "先问他现在感受如何", value: "F" }, { label: "帮他梳理问题的逻辑", value: "T" }] },
+    { text: "你更喜欢的阅读材料是：", options: [{ label: "实用指南和工具书", value: "S" }, { label: "科幻、哲学和思想类", value: "N" }, { label: "人物传记和故事", value: "F" }, { label: "历史和数据类", value: "T" }] },
+    { text: "你更常因为什么而改变主意？", options: [{ label: "看到更有力的证据", value: "T" }, { label: "感受到对方的真诚", value: "F" }, { label: "发现新的事实", value: "S" }, { label: "想到另一种可能性", value: "N" }] },
+    { text: "你更倾向于怎么面对失败？", options: [{ label: "分析原因，下次改进", value: "T" }, { label: "难过一阵，再重新振作", value: "F" }, { label: "接受它，继续往前走", value: "P" }, { label: "复盘全过程，找出漏洞", value: "J" }] },
+    { text: "在亲密关系中，你更看重：", options: [{ label: "彼此理解和情感共鸣", value: "F" }, { label: "共同成长和目标一致", value: "J" }, { label: "有说不完的新鲜话题", value: "N" }, { label: "生活上的默契和照顾", value: "S" }] },
+    { text: "你更常主动做的是：", options: [{ label: "发起聚会和活动", value: "E" }, { label: "在群里默默看消息", value: "I" }, { label: "规划下一步要做的事", value: "J" }, { label: "随时根据情况调整", value: "P" }] },
+    { text: "你更容易对什么产生兴趣？", options: [{ label: "能立刻上手的新玩意", value: "S" }, { label: "还没人探索过的领域", value: "N" }, { label: "能帮助别人的事情", value: "F" }, { label: "能证明对错的辩论", value: "T" }] },
+    { text: "你更希望别人怎么评价你？", options: [{ label: "聪明、有主见", value: "T" }, { label: "温暖、值得信赖", value: "F" }, { label: "有趣、有创意", value: "N" }, { label: "靠谱、说到做到", value: "S" }] },
+    { text: "面对一堆杂乱的信息，你会：", options: [{ label: "先分类整理，找出结构", value: "J" }, { label: "先抓住最关键的几条", value: "T" }, { label: "凭感觉挑感兴趣的看", value: "P" }, { label: "想想这些信息背后说明什么", value: "N" }] },
+    { text: "你更喜欢的休闲方式是：", options: [{ label: "户外运动或逛街", value: "E" }, { label: "宅家看剧或打游戏", value: "I" }, { label: "做手工、画画等创作", value: "N" }, { label: "整理收纳、做家务", value: "J" }] },
+    { text: "你更常在心里问自己：", options: [{ label: "这件事有没有用？", value: "S" }, { label: "这件事对我来说意味着什么？", value: "N" }, { label: "这样做对别人公平吗？", value: "F" }, { label: "这样做符合逻辑吗？", value: "T" }] },
+    { text: "当计划临时取消时，你：", options: [{ label: "有点失落，但很快另作安排", value: "P" }, { label: "感到烦躁，不喜欢被打乱", value: "J" }, { label: "正好可以休息一下", value: "I" }, { label: "马上联系别人看有没有新安排", value: "E" }] },
+    { text: "你更欣赏的领导风格是：", options: [{ label: "果断决策，目标明确", value: "T" }, { label: "关心下属，善于激励", value: "F" }, { label: "给空间，鼓励创新", value: "N" }, { label: "流程清晰，赏罚分明", value: "J" }] },
+    { text: "你更常记住的是：", options: [{ label: "别人对你说过的话", value: "T" }, { label: "别人对你的态度", value: "F" }, { label: "当时的场景和细节", value: "S" }, { label: "那件事给你的整体感觉", value: "N" }] },
+    { text: "你更愿意把时间花在：", options: [{ label: "提升现有技能", value: "S" }, { label: "探索全新领域", value: "N" }, { label: "维系重要关系", value: "F" }, { label: "完成既定目标", value: "J" }] },
+    { text: "你更容易被哪种说法打动？", options: [{ label: "“这样做效率最高”", value: "T" }, { label: "“这样做对大家都好”", value: "F" }, { label: "“这样做很有新意”", value: "N" }, { label: "“这样做最稳妥”", value: "S" }] },
+    { text: "你更常感到满足的时刻是：", options: [{ label: "完成清单上的所有事项", value: "J" }, { label: "突然想通一个难题", value: "N" }, { label: "和喜欢的人待在一起", value: "F" }, { label: "享受了一顿好饭", value: "S" }] },
+    { text: "你更倾向于怎么表达关心？", options: [{ label: "帮对方解决实际问题", value: "T" }, { label: "陪对方聊天、听倾诉", value: "F" }, { label: "送对方喜欢的小礼物", value: "S" }, { label: "给对方空间自己消化", value: "I" }] },
+    { text: "你更喜欢的天气是：", options: [{ label: "晴朗温暖，适合出门", value: "E" }, { label: "阴雨绵绵，适合宅家", value: "I" }, { label: "四季分明，各有特色", value: "S" }, { label: "变化多端，充满惊喜", value: "N" }] },
+    { text: "你更常因为什么而后悔？", options: [{ label: "话说得太直伤人", value: "T" }, { label: "没有及时表达心意", value: "F" }, { label: "计划没有执行到位", value: "J" }, { label: "太保守错过了机会", value: "P" }] },
+    { text: "你更希望自己成为：", options: [{ label: "专业领域的高手", value: "S" }, { label: "有远见的开创者", value: "N" }, { label: "温暖可靠的支持者", value: "F" }, { label: "高效果断的决策者", value: "T" }] },
+    { text: "你更常怎么处理情绪？", options: [{ label: "找朋友说出来", value: "E" }, { label: "自己慢慢消化", value: "I" }, { label: "分析情绪从哪来", value: "T" }, { label: "做点别的转移注意力", value: "P" }] },
+    { text: "你更看重一段关系里的：", options: [{ label: "真诚和理解", value: "F" }, { label: "共同目标和成长", value: "J" }, { label: "有趣和新鲜感", value: "N" }, { label: "稳定和陪伴", value: "S" }] },
+    { text: "你更愿意在哪种环境里生活？", options: [{ label: "繁华便利的城市", value: "E" }, { label: "安静舒适的小镇", value: "I" }, { label: "有文化底蕴的地方", value: "N" }, { label: "干净整齐的社区", value: "J" }] },
+    { text: "你更常对什么感到不耐烦？", options: [{ label: "反复讨论没有结论", value: "T" }, { label: "有人被冷落或受委屈", value: "F" }, { label: "计划总被临时改变", value: "J" }, { label: "一成不变没有新意", value: "N" }] },
+    { text: "你更愿意怎么度过生日？", options: [{ label: "和一大群朋友庆祝", value: "E" }, { label: "和少数亲近的人吃饭", value: "I" }, { label: "安排一场特别的旅行", value: "N" }, { label: "按自己习惯的节奏过", value: "P" }] },
+    { text: "你更常被什么吸引注意力？", options: [{ label: "眼前具体的东西", value: "S" }, { label: "脑海里冒出的念头", value: "N" }, { label: "周围人的情绪变化", value: "F" }, { label: "事情背后的规律", value: "T" }] },
+    { text: "你更愿意在团队里负责：", options: [{ label: "统筹规划和进度", value: "J" }, { label: "创意和方向", value: "N" }, { label: "沟通和协调", value: "F" }, { label: "执行和落地", value: "S" }] },
+    { text: "你更常因为什么而失眠？", options: [{ label: "想太多未来的事", value: "N" }, { label: "担心关系出问题", value: "F" }, { label: "事情没做完，心里不踏实", value: "J" }, { label: "白天太兴奋，晚上静不下来", value: "E" }] },
+    { text: "你更喜欢的相处方式是：", options: [{ label: "一起做点具体的事", value: "S" }, { label: "一起聊想法和未来", value: "N" }, { label: "互相倾听和支持", value: "F" }, { label: "各忙各的，偶尔互动", value: "I" }] },
+    { text: "你更常怎么看待自己？", options: [{ label: "行动力强，说做就做", value: "E" }, { label: "想得多，做得少", value: "I" }, { label: "理性，但有时太冷", value: "T" }, { label: "感性，但有时太软", value: "F" }] },
+    { text: "你更愿意把精力放在：", options: [{ label: "把擅长的事做得更好", value: "S" }, { label: "尝试没做过的事", value: "N" }, { label: "维护好重要的人", value: "F" }, { label: "完成长期目标", value: "J" }] },
+    { text: "你更常被人说：", options: [{ label: "太较真", value: "T" }, { label: "太敏感", value: "F" }, { label: "太跳脱", value: "N" }, { label: "太固执", value: "J" }] },
+    { text: "你更享受哪种成就感？", options: [{ label: "被人需要和信任", value: "F" }, { label: "解决了一个难题", value: "T" }, { label: "完成了一个计划", value: "J" }, { label: "体验了新鲜事物", value: "N" }] },
+    { text: "你更倾向于在什么时候做决定？", options: [{ label: "信息收集够了就做", value: "S" }, { label: "想到就做，先试再说", value: "P" }, { label: "等内心确定了再做", value: "F" }, { label: "分析清楚利弊再做", value: "T" }] },
+    { text: "你更希望自己的生活：", options: [{ label: "规律有序，心里踏实", value: "J" }, { label: "自由灵活，随遇而安", value: "P" }, { label: "热闹充实，有人陪伴", value: "E" }, { label: "安静自在，不被打扰", value: "I" }] },
+    { text: "你更常怎么看待“不同意见”？", options: [{ label: "有分歧才能更接近真相", value: "T" }, { label: "尽量求同存异，别伤感情", value: "F" }, { label: "多听听，说不定有新启发", value: "N" }, { label: "还是按原来稳妥的来", value: "S" }] },
+    { text: "你更愿意在哪个阶段花最多精力？", options: [{ label: "规划阶段，想清楚再动", value: "J" }, { label: "执行阶段，边做边改", value: "P" }, { label: "创意阶段，打开脑洞", value: "N" }, { label: "收尾阶段，确保落地", value: "S" }] },
+    { text: "你更常因为什么而对一个人失望？", options: [{ label: "不守承诺", value: "J" }, { label: "不讲道理", value: "T" }, { label: "冷漠不关心人", value: "F" }, { label: "太死板没意思", value: "N" }] },
+    { text: "你更愿意选择哪种方式放松？", options: [{ label: "约朋友吃饭聊天", value: "E" }, { label: "一个人看场电影", value: "I" }, { label: "学点新东西", value: "N" }, { label: "把家里收拾干净", value: "J" }] },
+    { text: "你更常依靠什么做判断？", options: [{ label: "过往的类似经验", value: "S" }, { label: "对未来的直觉", value: "N" }, { label: "事实和逻辑", value: "T" }, { label: "内心的感受", value: "F" }] },
+    { text: "你更希望别人对你说：", options: [{ label: "“你做得对，逻辑很清楚”", value: "T" }, { label: "“有你在，我觉得很安心”", value: "F" }, { label: "“你这个想法真有意思”", value: "N" }, { label: "“交给你，我放心”", value: "S" }] },
+    { text: "你更常怎么面对无聊？", options: [{ label: "找人聊天，热闹起来", value: "E" }, { label: "发呆或睡觉", value: "I" }, { label: "找点没做过的事试试", value: "N" }, { label: "把待办清单拿出来做", value: "J" }] },
+    { text: "你更愿意把家布置成：", options: [{ label: "干净整齐，东西都有固定位置", value: "J" }, { label: "随性舒服，东西顺手就好", value: "P" }, { label: "有设计感，体现品味", value: "N" }, { label: "实用为主，方便生活", value: "S" }] },
+    { text: "你更常怎么看待“失败”？", options: [{ label: "一次结果，不代表全部", value: "P" }, { label: "说明方法有问题，要调整", value: "T" }, { label: "很难过，需要时间缓过来", value: "F" }, { label: "要认真复盘，避免再犯", value: "J" }] },
+    { text: "你更愿意和什么样的人做朋友？", options: [{ label: "能一起玩、气氛轻松的人", value: "E" }, { label: "能深入聊天、彼此理解的人", value: "I" }, { label: "有想法、能互相启发的人", value: "N" }, { label: "靠谱、守时守约的人", value: "S" }] },
+    { text: "你更常因为什么而感到充实？", options: [{ label: "完成了计划中的事", value: "J" }, { label: "学到了新东西", value: "N" }, { label: "帮助了别人", value: "F" }, { label: "享受了当下的美好", value: "S" }] },
+    { text: "你更倾向于怎么看待“未来”？", options: [{ label: "充满不确定，但值得探索", value: "N" }, { label: "靠现在的努力一步步铺成", value: "S" }, { label: "需要提前规划和准备", value: "J" }, { label: "走一步看一步，顺其自然", value: "P" }] }
+  ];
+
+  const DEEP_BASE = (function(){
+    const result = [];
+    const templates = [
+      { t: "在聚会中，你更倾向于：", a: [{ l: "主动认识很多人，享受热闹", v: "E" }, { l: "和几个熟人深入聊天", v: "I" }, { l: "观察大家，偶尔加入话题", v: "I" }, { l: "成为焦点，带动气氛", v: "E" }] },
+      { t: "面对一个新项目，你首先：", a: [{ l: "立刻动手，边做边调整", v: "S" }, { l: "先规划整体框架和可能性", v: "N" }, { l: "参考过往经验，按流程推进", v: "S" }, { l: "构思多种创意方案", v: "N" }] },
+      { t: "做决定时，你更看重：", a: [{ l: "逻辑分析和客观事实", v: "T" }, { l: "个人感受和对他人的影响", v: "F" }, { l: "公平的规则和效率", v: "T" }, { l: "人情世故和和谐关系", v: "F" }] },
+      { t: "你的日常安排更接近：", a: [{ l: "有计划、按部就班", v: "J" }, { l: "灵活随意、随性而发", v: "P" }, { l: "有大致框架，细节灵活", v: "J" }, { l: "走到哪算哪，享受随机", v: "P" }] },
+      { t: "当你要充电时，你更喜欢：", a: [{ l: "出门走走，和朋友相聚", v: "E" }, { l: "独自待着，安静地看书", v: "I" }, { l: "参加集体活动，感受氛围", v: "E" }, { l: "一个人散步或听音乐", v: "I" }] },
+      { t: "你更容易注意到：", a: [{ l: "具体的细节和现实情况", v: "S" }, { l: "隐藏的模式和未来的可能", v: "N" }, { l: "当下的实际问题和解决方式", v: "S" }, { l: "事物背后的深层含义", v: "N" }] },
+      { t: "面对冲突，你通常：", a: [{ l: "直接指出问题，就事论事", v: "T" }, { l: "考虑对方情绪，尽量温和", v: "F" }, { l: "用事实和逻辑说服对方", v: "T" }, { l: "先安抚情绪再沟通", v: "F" }] },
+      { t: "你的书桌/工作空间通常：", a: [{ l: "井井有条，物品分类清晰", v: "J" }, { l: "看起来有点乱，但自己找得到", v: "P" }, { l: "文件按项目归档", v: "J" }, { l: "东西随手放，需要时再翻", v: "P" }] },
+      { t: "你更享受哪种对话？", a: [{ l: "关于现实生活、具体经验", v: "S" }, { l: "关于抽象概念、未来设想", v: "N" }, { l: "探讨实际操作和步骤", v: "S" }, { l: "聊理想、哲学和可能性", v: "N" }] },
+      { t: "你更认同哪句话？", a: [{ l: "情感是决策中不可忽视的因素", v: "F" }, { l: "公平的规则比个人感受更重要", v: "T" }, { l: "理解他人的感受是首要的", v: "F" }, { l: "逻辑一致才是解决问题的关键", v: "T" }] },
+      { t: "旅行前，你通常会：", a: [{ l: "做好详细攻略，安排好行程", v: "J" }, { l: "订好机票住宿，其他随缘", v: "P" }, { l: "列出必去景点和时间表", v: "J" }, { l: "到了再说，享受即兴探索", v: "P" }] },
+      { t: "你觉得自己更偏向：", a: [{ l: "在人群中获得能量", v: "E" }, { l: "在独处中恢复精力", v: "I" }, { l: "喜欢热闹，但也需要独处", v: "E" }, { l: "社交后需要长时间安静", v: "I" }] },
+      { t: "你更容易记住：", a: [{ l: "具体的数字和事实", v: "S" }, { l: "整体的印象和感觉", v: "N" }, { l: "事件的细节和经过", v: "S" }, { l: "事情带来的启发和意义", v: "N" }] },
+      { t: "当朋友向你倾诉时，你倾向于：", a: [{ l: "帮他分析问题，给出方案", v: "T" }, { l: "先共情，让他感到被理解", v: "F" }, { l: "指出问题所在，理性建议", v: "T" }, { l: "耐心倾听，给予情感支持", v: "F" }] },
+      { t: "你更喜欢哪种工作环境？", a: [{ l: "有明确的流程和截止日期", v: "J" }, { l: "弹性工作，自由安排", v: "P" }, { l: "结构清晰，职责分明", v: "J" }, { l: "灵活多变，鼓励即兴", v: "P" }] },
+      { t: "在社交场合，你通常：", a: [{ l: "主动和陌生人打开话匣", v: "E" }, { l: "等别人来和你搭话", v: "I" }, { l: "很快融入群体，谈笑风生", v: "E" }, { l: "和少数人深入交流", v: "I" }] },
+      { t: "你更倾向于相信：", a: [{ l: "眼见为实，经验可靠", v: "S" }, { l: "直觉和灵感带来的启发", v: "N" }, { l: "经过验证的事实", v: "S" }, { l: "内心的预感与洞见", v: "N" }] },
+      { t: "你更看重一个人的：", a: [{ l: "能力和逻辑清晰度", v: "T" }, { l: "善良和情感细腻度", v: "F" }, { l: "公正和原则性", v: "T" }, { l: "同理心和包容度", v: "F" }] },
+      { t: "对于未完成的任务，你：", a: [{ l: "感到不安，想尽快完成", v: "J" }, { l: "觉得可以灵活处理，不着急", v: "P" }, { l: "会制定计划逐步完成", v: "J" }, { l: "先放一放，等状态好了再做", v: "P" }] },
+      { t: "你更常：", a: [{ l: "先行动，再思考", v: "E" }, { l: "先思考，再行动", v: "I" }, { l: "边做边说，享受互动", v: "E" }, { l: "想清楚再表达", v: "I" }] },
+      { t: "你更容易被什么说服？", a: [{ l: "数据和案例", v: "S" }, { l: "理念和愿景", v: "N" }, { l: "真实发生的事例", v: "S" }, { l: "富有想象力的蓝图", v: "N" }] },
+      { t: "你更愿意成为：", a: [{ l: "公正的裁判", v: "T" }, { l: "温暖的倾听者", v: "F" }, { l: "客观的分析者", v: "T" }, { l: "贴心的支持者", v: "F" }] },
+      { t: "你更喜欢做：", a: [{ l: "已经知道怎么做的事", v: "J" }, { l: "需要即兴发挥的事", v: "P" }, { l: "有明确步骤的任务", v: "J" }, { l: "充满变数的挑战", v: "P" }] },
+      { t: "独处时，你感到：", a: [{ l: "有时无聊，想找人说话", v: "E" }, { l: "非常自在，享受安静", v: "I" }, { l: "过一会儿就想联系朋友", v: "E" }, { l: "觉得是宝贵的休息时间", v: "I" }] },
+      { t: "你更关注：", a: [{ l: "当下正在发生的事", v: "S" }, { l: "未来可能发生的事", v: "N" }, { l: "眼前的实际问题", v: "S" }, { l: "长远的发展趋势", v: "N" }] },
+      { t: "当团队出现分歧，你更倾向于：", a: [{ l: "提出一个最理性的方案", v: "T" }, { l: "协调各方情绪，达成共识", v: "F" }, { l: "分析利弊，选出最优解", v: "T" }, { l: "照顾每个人的感受", v: "F" }] },
+      { t: "你更习惯：", a: [{ l: "提前做好计划", v: "J" }, { l: "随机应变", v: "P" }, { l: "列出待办事项清单", v: "J" }, { l: "根据当天状态调整", v: "P" }] },
+      { t: "你更愿意：", a: [{ l: "在热闹中寻找乐趣", v: "E" }, { l: "在安静中寻找深度", v: "I" }, { l: "参加聚会拓展人脉", v: "E" }, { l: "一个人读书或思考", v: "I" }] },
+      { t: "你更相信：", a: [{ l: "实践出真知", v: "S" }, { l: "想象力驱动世界", v: "N" }, { l: "亲身经历最可靠", v: "S" }, { l: "灵感比经验更重要", v: "N" }] },
+      { t: "你认为更重要的是：", a: [{ l: "公平", v: "T" }, { l: "仁慈", v: "F" }, { l: "规则面前人人平等", v: "T" }, { l: "体谅每个人的难处", v: "F" }] },
+      { t: "你更享受：", a: [{ l: "完成一个长期计划", v: "J" }, { l: "探索多个新的可能", v: "P" }, { l: "按部就班推进目标", v: "J" }, { l: "同时尝试不同方向", v: "P" }] },
+      { t: "你更容易：", a: [{ l: "在人群中感到兴奋", v: "E" }, { l: "在独处中恢复精力", v: "I" }, { l: "通过交流理清思路", v: "E" }, { l: "通过沉思获得答案", v: "I" }] },
+      { t: "你更依赖：", a: [{ l: "经验和事实", v: "S" }, { l: "灵感和直觉", v: "N" }, { l: "过去成功的做法", v: "S" }, { l: "内心的指引", v: "N" }] },
+      { t: "你更看重：", a: [{ l: "逻辑的严密性", v: "T" }, { l: "情感的真诚性", v: "F" }, { l: "论证是否合理", v: "T" }, { l: "是否发自内心", v: "F" }] },
+      { t: "你更倾向于：", a: [{ l: "按计划行事", v: "J" }, { l: "保持开放选项", v: "P" }, { l: "提前确定目标", v: "J" }, { l: "走一步看一步", v: "P" }] },
+      { t: "你更喜欢：", a: [{ l: "成为焦点", v: "E" }, { l: "做幕后的支持者", v: "I" }, { l: "在台前表达观点", v: "E" }, { l: "在背后默默付出", v: "I" }] },
+      { t: "你更容易注意到：", a: [{ l: "事物的实际用途", v: "S" }, { l: "事物背后的意义", v: "N" }, { l: "具体的使用方法", v: "S" }, { l: "象征和隐喻", v: "N" }] },
+      { t: "你更愿意：", a: [{ l: "用逻辑说服别人", v: "T" }, { l: "用情感打动别人", v: "F" }, { l: "摆事实讲道理", v: "T" }, { l: "讲故事引发共鸣", v: "F" }] },
+      { t: "你更享受：", a: [{ l: "按部就班的稳定", v: "J" }, { l: "灵活多变的自由", v: "P" }, { l: "清晰的规则和节奏", v: "J" }, { l: "随性的节奏和空间", v: "P" }] },
+      { t: "你更认同：", a: [{ l: "行动胜于言语", v: "E" }, { l: "思考胜于行动", v: "I" }, { l: "多交流才能碰撞火花", v: "E" }, { l: "安静思考才能深入", v: "I" }] }
+    ];
+
+    const branchPrefixes = [
+      "当事情进展顺利时，", "当事情陷入僵局时，", "在压力很大的时候，",
+      "面对陌生人的时候，", "和家人相处的时候，", "独自做重要选择时，",
+      "被别人误解时，", "获得意外机会时，", "需要妥协的时候，",
+      "回顾过去的时候，", "想象未来的时候，", "在人群中感到疲惫时，",
+      "需要快速反应时，", "需要长期坚持时", "面对规则的时候，",
+      "面对情感冲突时，", "在兴趣和现实之间，", "当朋友求助时，",
+      "当计划被打乱时，", "当获得认可时"
+    ];
+
+    let idx = 0;
+    while (result.length < 200) {
+      const tpl = templates[idx % templates.length];
+      const round = Math.floor(idx / templates.length);
+      let prefix = "";
+      if (round < branchPrefixes.length) {
+        prefix = branchPrefixes[round];
+      } else {
+        prefix = "在更深层的情境中（" + (round + 1) + "）";
       }
+      const text = prefix + tpl.t;
+      const opts = tpl.a.map(o => ({ label: o.l, value: o.v }));
+      result.push({ text, options: opts });
+      idx++;
+    }
+    return result;
+  })();
 
-      let currentVersion = 40;
-      let questions = buildQuestionPool(40);
-      let currentQuestionIndex = 0;
-      let answers = new Array(questions.length).fill(null);
+  const TYPE_DESC = {
+    INTJ: { title: "建筑师", tag: "战略性的独立思考者", desc: "你拥有强烈的内在秩序感和长远眼光，习惯在头脑中构建完整的系统模型，再据此行动。你不太依赖外部认可，更相信经过反复推演得出的判断。对复杂问题有天然的耐心，喜欢把混乱梳理成结构。在人群中你可能显得疏离，但一旦认定目标，执行力惊人。你需要警惕的是过度自信和忽视他人感受，有时放慢节奏、倾听反馈，会让你的计划走得更远。" },
+    INTP: { title: "逻辑学家", tag: "无止境的知识探索者", desc: "你对世界运行原理有近乎本能的好奇，喜欢拆解概念、寻找漏洞、重建逻辑。比起结论，你更享受推导过程本身。你思维跳跃，常能提出别人想不到的角度，但可能因为追求完美逻辑而迟迟不行动。在社交中你随和但保持距离，真正让你兴奋的是一场高质量的智力对话。你需要警惕的是过度思考导致拖延，以及在情感表达上显得疏离。" },
+    ENTJ: { title: "指挥官", tag: "天生的目标推动者", desc: "你看到目标就会自动规划路径，看到低效就会忍不住优化。你有强大的决断力和组织能力，在压力下反而更清醒。你不害怕承担责任，甚至享受带领团队攻克难关的过程。你的直接和强势有时会让身边的人感到压迫，但你的初衷往往是推动事情向前。你需要警惕的是把效率凌驾于人的感受之上，学会放权和倾听会让你的领导力更完整。" },
+    ENTP: { title: "辩论家", tag: "永不疲倦的灵感火花", desc: "你脑子里总有新点子，喜欢挑战既有框架，在辩论和思想碰撞中获得快感。你反应极快，善于发现逻辑漏洞，也擅长用幽默化解紧张。你讨厌重复和枯燥，渴望不断变化的刺激。但你也容易在多个方向间跳跃，难以坚持到落地。你需要警惕的是用聪明掩盖深度，以及为了辩论而辩论。把灵感转化为成果，是你最大的成长课题。" },
+    INFJ: { title: "提倡者", tag: "安静而坚定的理想主义者", desc: "你内心有清晰的价值观，对世界有一种近乎使命感的关怀。你善于洞察他人的情绪和动机，常常在别人开口前就感知到他们的需要。你追求深度连接，讨厌肤浅的社交。你看起来温和，但原则问题上非常坚定。你需要警惕的是过度付出导致的耗竭，以及把理想标准套在自己和他人身上造成的失望。学会设立边界，是你持续发光的前提。" },
+    INFP: { title: "调停者", tag: "温柔而丰富的内心世界", desc: "你对美、意义和真实有极高的敏感度，内心世界丰富而细腻。你重视和谐，讨厌冲突，常常在关系中优先照顾别人的感受。你有强大的共情能力，能理解那些不被看见的情绪。你适合创作、助人和任何需要想象力的领域。你需要警惕的是过度内耗和回避冲突，以及因为害怕失望而不敢表达真实需求。你的温柔需要带一点锋芒，才能真正被珍惜。" },
+    ENFJ: { title: "主人公", tag: "鼓舞人心的凝聚力核心", desc: "你天生擅长理解人、激励人，总能让身边的人感到被看见和被重视。你有强烈的责任感，愿意为集体付出，也善于协调不同立场。你在人群中像一束光，能带动气氛、凝聚共识。你需要警惕的是过度承担他人的情绪，以及忽视自己的需要。你值得被同样温柔地对待，学会接受帮助，不会削弱你的力量。" },
+    ENFP: { title: "竞选者", tag: "热情洋溢的可能性探索者", desc: "你对生活充满热情，对人和新事物有天然的好奇。你善于建立连接，能在短时间内让陌生人感到亲近。你脑子里总有无数可能性，讨厌被束缚，渴望自由和新鲜感。你适合创意、传播和任何需要感染力的领域。你需要警惕的是三分钟热度和逃避承诺，以及因为太在意可能性而难以专注。把热情聚焦，你会走得更远。" },
+    ISTJ: { title: "物流师", tag: "可靠踏实的秩序守护者", desc: "你重视承诺、规则和秩序，做事有条不紊，答应的事一定会做到。你不喜欢夸张和不确定，更相信经过验证的经验。你在团队中是那个让人放心的基石，默默把细节做到位。你需要警惕的是对新变化过于保守，以及把责任压在自己身上不轻易求助。适当拥抱变化，会让你的稳定更有弹性。" },
+    ISFJ: { title: "守卫者", tag: "细致入微的温暖守护者", desc: "你细心、体贴，总能在细节中照顾到别人的需要。你重视传统和稳定，对亲近的人有强烈的责任感。你记得别人的喜好，默默付出，不习惯邀功。你在团队中是那个让氛围变暖的人。你需要警惕的是过度牺牲自己，以及因为害怕冲突而压抑真实感受。你的付出值得被看见，也值得被回报。" },
+    ESTJ: { title: "总经理", tag: "务实高效的组织者", desc: "你目标明确、行动果断，善于把混乱的局面理出头绪。你重视效率和结果，讨厌拖沓和模糊。你在组织中天然适合管理和推进的角色，能把计划落到实处。你需要警惕的是过于强势和控制欲，以及忽视他人的情绪需求。在追求效率的同时留一点弹性，你的团队会更有凝聚力。" },
+    ESFJ: { title: "执政官", tag: "热心周到的关系维系者", desc: "你重视和谐，乐于照顾他人，在社交中营造温暖氛围。你对人际关系有敏锐的感知，总能及时察觉谁需要帮助。你擅长组织聚会、维系关系，是朋友圈里的粘合剂。你需要警惕的是过度在意他人评价，以及为了和谐而委屈自己。你的善意需要边界，才不会变成消耗。" },
+    ISTP: { title: "鉴赏家", tag: "冷静灵活的问题解决者", desc: "你动手能力强，喜欢通过实践理解事物。面对突发状况你冷静沉着，能快速找到解决办法。你不喜欢被规则束缚，偏好独立行动和自由空间。你对工具、机械和操作类事物有天然兴趣。你需要警惕的是情感表达上的疏离，以及因为追求自由而回避长期承诺。适当表达在乎，会让关系更稳固。" },
+    ISFP: { title: "探险家", tag: "敏感而自由的生活美学家", desc: "你对美和感官体验有独特的品味，活在当下，重视真实感受。你温柔、随和，不喜欢冲突和束缚。你在创作、艺术和自然中找到平静，也善于用行动而非语言表达关心。你需要警惕的是逃避长期规划，以及因为害怕冲突而压抑自己。给生活一点结构，你的自由会更有底气。" },
+    ESTP: { title: "企业家", tag: "精力充沛的行动派", desc: "你反应快、行动力强，在快节奏和充满变数的环境中如鱼得水。你善于抓住机会，喜欢直接沟通，不喜欢绕弯子。你对当下有敏锐的感知，能在压力下保持镇定。你需要警惕的是冲动和忽视长远后果，以及因为追求刺激而忽略身边人的感受。多一点耐心，你的行动力会更有方向。" },
+    ESFP: { title: "表演者", tag: "热情洋溢的当下享受者", desc: "你热爱生活，感染力强，走到哪里都能带来笑声。你对氛围和人的情绪有天然的敏感度，善于让当下变得有趣。你享受成为焦点，也愿意为朋友带来快乐。你需要警惕的是逃避严肃规划和长期责任，以及因为追求即时满足而忽略后果。给快乐加一点方向，你的人生会更精彩。" }
+  };
 
-      const quizArea = document.getElementById('quizArea');
-      const resultArea = document.getElementById('resultArea');
-      const counter = document.getElementById('counter');
-      const progressFill = document.getElementById('progressFill');
-      const questionText = document.getElementById('questionText');
-      const optionsContainer = document.getElementById('optionsContainer');
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
-      const resultType = document.getElementById('resultType');
-      const resultTitle = document.getElementById('resultTitle');
-      const resultDesc = document.getElementById('resultDesc');
-      const restartBtn = document.getElementById('restartBtn');
-      const versionTabs = document.querySelectorAll('.version-tab');
+  const STORAGE_KEY = 'mbti_test_history_v1';
 
-      function resetState(version) {
-        currentVersion = version;
-        questions = buildQuestionPool(version);
-        currentQuestionIndex = 0;
-        answers = new Array(questions.length).fill(null);
-        quizArea.classList.remove('hidden');
-        resultArea.classList.add('hidden');
-        versionTabs.forEach(tab => {
-          tab.classList.toggle('active', parseInt(tab.dataset.version) === version);
-        });
-        renderQuestion();
-      }
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
 
-      function updateProgress() {
-        const total = questions.length;
-        const answered = answers.filter(a => a !== null).length;
-        const percent = (answered / total) * 100;
-        progressFill.style.width = percent + '%';
-        counter.textContent = (currentQuestionIndex + 1) + ' / ' + total;
-      }
+  function prepareQuestions(base, count) {
+    const shuffledBase = shuffle(base).slice(0, count);
+    return shuffledBase.map(q => ({
+      text: q.text,
+      options: shuffle(q.options).map(opt => ({ label: opt.label, value: opt.value }))
+    }));
+  }
 
-      function renderQuestion() {
-        const q = questions[currentQuestionIndex];
-        questionText.textContent = q.text;
+  function getVersionQuestions(version) {
+    if (version === 40) return prepareQuestions(SIMPLE_BASE, 40);
+    if (version === 100) return prepareQuestions(NORMAL_BASE, 100);
+    return prepareQuestions(DEEP_BASE, 200);
+  }
 
-        const savedAnswer = answers[currentQuestionIndex];
-        optionsContainer.innerHTML = '';
+  let currentVersion = 40;
+  let questions = [];
+  let currentQuestionIndex = 0;
+  let answers = [];
 
-        q.options.forEach((opt, idx) => {
-          const btn = document.createElement('button');
-          btn.className = 'option-btn';
-          if (savedAnswer !== null && savedAnswer === opt.value) {
-            btn.classList.add('selected');
-          }
-          btn.innerHTML = `<span class="option-letter">${String.fromCharCode(65 + idx)}</span>${opt.label}`;
-          btn.addEventListener('click', () => {
-            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            answers[currentQuestionIndex] = opt.value;
-            updateProgress();
-            updateNavButtons();
-          });
-          optionsContainer.appendChild(btn);
-        });
+  const quizArea = document.getElementById('quizArea');
+  const resultArea = document.getElementById('resultArea');
+  const counter = document.getElementById('counter');
+  const progressFill = document.getElementById('progressFill');
+  const questionText = document.getElementById('questionText');
+  const optionsContainer = document.getElementById('optionsContainer');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const resultType = document.getElementById('resultType');
+  const resultTitle = document.getElementById('resultTitle');
+  const resultTagline = document.getElementById('resultTagline');
+  const dimsBar = document.getElementById('dimsBar');
+  const resultDesc = document.getElementById('resultDesc');
+  const restartBtn = document.getElementById('restartBtn');
+  const historyToggle = document.getElementById('historyToggle');
+  const historySection = document.getElementById('historySection');
+  const historyList = document.getElementById('historyList');
+  const historyClear = document.getElementById('historyClear');
+  const versionTabs = document.querySelectorAll('.version-tab');
 
+  function resetState(version) {
+    currentVersion = version;
+    questions = getVersionQuestions(version);
+    currentQuestionIndex = 0;
+    answers = new Array(questions.length).fill(null);
+    quizArea.classList.remove('hidden');
+    resultArea.classList.add('hidden');
+    historySection.classList.add('hidden');
+    versionTabs.forEach(tab => {
+      tab.classList.toggle('active', parseInt(tab.dataset.version) === version);
+    });
+    renderQuestion();
+  }
+
+  function updateProgress() {
+    const total = questions.length;
+    const answered = answers.filter(a => a !== null).length;
+    progressFill.style.width = (answered / total) * 100 + '%';
+    counter.textContent = (currentQuestionIndex + 1) + ' / ' + total;
+  }
+
+  function renderQuestion() {
+    const q = questions[currentQuestionIndex];
+    questionText.textContent = q.text;
+    const saved = answers[currentQuestionIndex];
+    optionsContainer.innerHTML = '';
+    q.options.forEach((opt, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      if (saved !== null && saved === opt.value) btn.classList.add('selected');
+      btn.innerHTML = '<span class="option-letter">' + String.fromCharCode(65 + idx) + '</span>' + opt.label;
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        answers[currentQuestionIndex] = opt.value;
         updateProgress();
         updateNavButtons();
-      }
-
-      function updateNavButtons() {
-        prevBtn.disabled = currentQuestionIndex === 0;
-
-        if (currentQuestionIndex === questions.length - 1) {
-          nextBtn.textContent = '查看结果';
-        } else {
-          nextBtn.textContent = '下一题';
-        }
-
-        const hasAnswer = answers[currentQuestionIndex] !== null;
-        if (!hasAnswer && currentQuestionIndex < questions.length - 1) {
-          nextBtn.disabled = true;
-        } else {
-          nextBtn.disabled = false;
-        }
-
-        if (currentQuestionIndex === questions.length - 1 && !hasAnswer) {
-          nextBtn.disabled = false;
-        }
-      }
-
-      function goToNext() {
-        if (currentQuestionIndex < questions.length - 1) {
-          if (answers[currentQuestionIndex] === null) {
-            return;
-          }
-          currentQuestionIndex++;
-          renderQuestion();
-        } else {
-          showResult();
-        }
-      }
-
-      function goToPrev() {
-        if (currentQuestionIndex > 0) {
-          currentQuestionIndex--;
-          renderQuestion();
-        }
-      }
-
-      function calculateType() {
-        const counts = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
-        answers.forEach((val) => {
-          if (val && counts.hasOwnProperty(val)) {
-            counts[val]++;
-          }
-        });
-
-        const e = counts.E >= counts.I ? 'E' : 'I';
-        const s = counts.S >= counts.N ? 'S' : 'N';
-        const t = counts.T >= counts.F ? 'T' : 'F';
-        const j = counts.J >= counts.P ? 'J' : 'P';
-
-        return e + s + t + j;
-      }
-
-      function showResult() {
-        if (answers.some(a => a === null)) {
-          for (let i = 0; i < answers.length; i++) {
-            if (answers[i] === null) {
-              currentQuestionIndex = i;
-              renderQuestion();
-              return;
-            }
-          }
-        }
-
-        const type = calculateType();
-        const info = typeDescriptions[type] || { title: '探索者', desc: '独特的人格组合，拥有自己的光芒。' };
-
-        resultType.textContent = type;
-        resultTitle.textContent = info.title;
-        resultDesc.textContent = info.desc;
-
-        quizArea.classList.add('hidden');
-        resultArea.classList.remove('hidden');
-      }
-
-      function restartTest() {
-        currentQuestionIndex = 0;
-        answers = new Array(questions.length).fill(null);
-        resultArea.classList.add('hidden');
-        quizArea.classList.remove('hidden');
-        renderQuestion();
-      }
-
-      versionTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-          const version = parseInt(tab.dataset.version);
-          if (version !== currentVersion) {
-            resetState(version);
-          }
-        });
       });
+      optionsContainer.appendChild(btn);
+    });
+    updateProgress();
+    updateNavButtons();
+  }
 
-      nextBtn.addEventListener('click', goToNext);
-      prevBtn.addEventListener('click', goToPrev);
-      restartBtn.addEventListener('click', restartTest);
+  function updateNavButtons() {
+    prevBtn.disabled = currentQuestionIndex === 0;
+    nextBtn.textContent = currentQuestionIndex === questions.length - 1 ? '查看结果' : '下一题';
+    const has = answers[currentQuestionIndex] !== null;
+    if (!has && currentQuestionIndex < questions.length - 1) nextBtn.disabled = true;
+    else nextBtn.disabled = false;
+  }
 
-      resetState(40);
-    })();
-  </script>
+  function goToNext() {
+    if (currentQuestionIndex < questions.length - 1) {
+      if (answers[currentQuestionIndex] === null) return;
+      currentQuestionIndex++;
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function goToPrev() {
+    if (currentQuestionIndex > 0) {
+      currentQuestionIndex--;
+      renderQuestion();
+    }
+  }
+
+  function calculate() {
+    const counts = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+    answers.forEach(v => { if (v && counts.hasOwnProperty(v)) counts[v]++; });
+    const e = counts.E >= counts.I ? 'E' : 'I';
+    const s = counts.S >= counts.N ? 'S' : 'N';
+    const t = counts.T >= counts.F ? 'T' : 'F';
+    const j = counts.J >= counts.P ? 'J' : 'P';
+    return { type: e + s + t + j, counts };
+  }
+
+  function renderDims(counts) {
+    const totalEI = counts.E + counts.I || 1;
+    const totalSN = counts.S + counts.N || 1;
+    const totalTF = counts.T + counts.F || 1;
+    const totalJP = counts.J + counts.P || 1;
+    const dims = [
+      { left: 'E', right: 'I', lv: counts.E, rv: counts.I, l: (counts.E / totalEI) * 100 },
+      { left: 'S', right: 'N', lv: counts.S, rv: counts.N, l: (counts.S / totalSN) * 100 },
+      { left: 'T', right: 'F', lv: counts.T, rv: counts.F, l: (counts.T / totalTF) * 100 },
+      { left: 'J', right: 'P', lv: counts.J, rv: counts.P, l: (counts.J / totalJP) * 100 }
+    ];
+    dimsBar.innerHTML = dims.map(d => (
+      '<div class="dim-row">' +
+        '<span class="dim-label">' + d.left + ' ' + d.right + '</span>' +
+        '<div class="dim-track">' +
+          '<div class="dim-fill-left" style="width:' + d.l + '%"></div>' +
+          '<div class="dim-fill-right" style="width:' + (100 - d.l) + '%"></div>' +
+        '</div>' +
+        '<span class="dim-pct">' + Math.round(d.l) + '%</span>' +
+      '</div>'
+    )).join('');
+  }
+
+  function saveToHistory(type, version, counts) {
+    let history = [];
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) history = JSON.parse(raw);
+    } catch (e) { history = []; }
+    history.unshift({
+      type,
+      version,
+      counts,
+      time: new Date().toLocaleString('zh-CN')
+    });
+    if (history.length > 20) history = history.slice(0, 20);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(history)); } catch (e) {}
+  }
+
+  function renderHistory() {
+    let history = [];
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) history = JSON.parse(raw);
+    } catch (e) { history = []; }
+    if (!history.length) {
+      historyList.innerHTML = '<div class="history-empty">暂无历史记录</div>';
+      return;
+    }
+    historyList.innerHTML = history.map(h => (
+      '<div class="history-item">' +
+        '<span class="h-type">' + h.type + ' · ' + (TYPE_DESC[h.type] ? TYPE_DESC[h.type].title : '') + '</span>' +
+        '<span class="h-meta">' + h.version + '题 · ' + h.time + '</span>' +
+      '</div>'
+    )).join('');
+  }
+
+  function showResult() {
+    if (answers.some(a => a === null)) {
+      for (let i = 0; i < answers.length; i++) {
+        if (answers[i] === null) {
+          currentQuestionIndex = i;
+          renderQuestion();
+          return;
+        }
+      }
+    }
+    const { type, counts } = calculate();
+    const info = TYPE_DESC[type] || { title: '探索者', tag: '独特的人格组合', desc: '你拥有独一无二的人格组合。' };
+    resultType.textContent = type;
+    resultTitle.textContent = info.title;
+    resultTagline.textContent = info.tag;
+    renderDims(counts);
+    resultDesc.innerHTML = '<p>' + info.desc + '</p>' +
+      '<h3>关于 ' + type + ' 的进一步解读</h3>' +
+      '<p>在本次' + currentVersion + '题测试中，你的四个维度倾向分别为：' +
+      'E/I 维度偏向 <strong>' + (counts.E >= counts.I ? '外向 E' : '内向 I') + '</strong>（E ' + counts.E + ' / I ' + counts.I + '）；' +
+      'S/N 维度偏向 <strong>' + (counts.S >= counts.N ? '实感 S' : '直觉 N') + '</strong>（S ' + counts.S + ' / N ' + counts.N + '）；' +
+      'T/F 维度偏向 <strong>' + (counts.T >= counts.F ? '思考 T' : '情感 F') + '</strong>（T ' + counts.T + ' / F ' + counts.F + '）；' +
+      'J/P 维度偏向 <strong>' + (counts.J >= counts.P ? '判断 J' : '知觉 P') + '</strong>（J ' + counts.J + ' / P ' + counts.P + '）。' +
+      '这些倾向共同塑造了你独特的认知与行为风格。</p>' +
+      '<p>需要说明的是，MBTI 是一种自我认知的参考工具，而非对人的定义。同一种类型的人也会因成长经历、环境和当下状态而有很大差异。建议把测试结果当作一面镜子，用来观察自己的偏好，而不是给自己贴标签。</p>';
+    quizArea.classList.add('hidden');
+    resultArea.classList.remove('hidden');
+    historySection.classList.add('hidden');
+    saveToHistory(type, currentVersion, counts);
+  }
+
+  function restartTest() {
+    currentQuestionIndex = 0;
+    answers = new Array(questions.length).fill(null);
+    resultArea.classList.add('hidden');
+    quizArea.classList.remove('hidden');
+    historySection.classList.add('hidden');
+    renderQuestion();
+  }
+
+  versionTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const v = parseInt(tab.dataset.version);
+      if (v !== currentVersion) resetState(v);
+    });
+  });
+
+  nextBtn.addEventListener('click', goToNext);
+  prevBtn.addEventListener('click', goToPrev);
+  restartBtn.addEventListener('click', restartTest);
+
+  historyToggle.addEventListener('click', () => {
+    if (historySection.classList.contains('hidden')) {
+      renderHistory();
+      historySection.classList.remove('hidden');
+    } else {
+      historySection.classList.add('hidden');
+    }
+  });
+
+  historyClear.addEventListener('click', () => {
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    renderHistory();
+  });
+
+  resetState(40);
+})();
+</script>
 </body>
 </html>
