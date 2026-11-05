@@ -1,0 +1,627 @@
+      <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MBTI 16人格</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .test-container {
+      background-color: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+      padding: 40px 35px;
+      max-width: 760px;
+      width: 100%;
+      border: 1px solid #eaeaea;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: #0b2b4a;
+      text-align: center;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .subhead {
+      text-align: center;
+      color: #4a5b6b;
+      font-size: 1rem;
+      font-weight: 400;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 18px;
+    }
+
+    .version-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .version-tab {
+      background-color: #f9fafb;
+      border: 1.5px solid #d6dde3;
+      border-radius: 40px;
+      padding: 10px 26px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #1e3c5a;
+      cursor: pointer;
+      transition: all 0.1s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+
+    .version-tab:hover {
+      background-color: #ffffff;
+      border-color: #1e3c5a;
+    }
+
+    .version-tab.active {
+      background-color: #1e3c5a;
+      border-color: #1e3c5a;
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    .version-tab .badge {
+      display: inline-block;
+      background-color: #eef1f4;
+      color: #0b2b4a;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 30px;
+      margin-left: 8px;
+    }
+
+    .version-tab.active .badge {
+      background-color: #ffffff;
+      color: #0b2b4a;
+    }
+
+    .progress-area {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      color: #1e3c5a;
+      font-weight: 500;
+    }
+
+    .question-counter {
+      background-color: #f0f2f4;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      color: #0b2b4a;
+      border: 1px solid #d6dde3;
+      white-space: nowrap;
+    }
+
+    .progress-bar-bg {
+      flex-grow: 1;
+      height: 8px;
+      background-color: #e9ecef;
+      border-radius: 10px;
+      margin-left: 18px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 8px;
+      background-color: #1e3c5a;
+      width: 0%;
+      border-radius: 10px;
+      transition: width 0.15s ease;
+    }
+
+    .question-text {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #0b2b4a;
+      line-height: 1.4;
+      margin-bottom: 32px;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      letter-spacing: -0.01em;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+
+    .option-btn {
+      background-color: #f9fafb;
+      border: 1.5px solid #d6dde3;
+      border-radius: 16px;
+      padding: 15px 20px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #1e3c5a;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.1s ease;
+      display: flex;
+      align-items: center;
+      line-height: 1.4;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+
+    .option-btn:hover {
+      background-color: #ffffff;
+      border-color: #1e3c5a;
+      box-shadow: 0 4px 12px rgba(0, 20, 40, 0.06);
+    }
+
+    .option-btn.selected {
+      background-color: #ffffff;
+      border-color: #1e3c5a;
+      border-width: 2px;
+      box-shadow: 0 4px 14px rgba(20, 50, 80, 0.1);
+      font-weight: 500;
+    }
+
+    .option-letter {
+      display: inline-block;
+      width: 26px;
+      height: 26px;
+      background-color: #eef1f4;
+      border-radius: 30px;
+      text-align: center;
+      line-height: 26px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #0b2b4a;
+      margin-right: 14px;
+      flex-shrink: 0;
+    }
+
+    .option-btn.selected .option-letter {
+      background-color: #1e3c5a;
+      color: #ffffff;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .nav-btn {
+      background-color: #ffffff;
+      border: 1.5px solid #d6dde3;
+      border-radius: 40px;
+      padding: 12px 30px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #1e3c5a;
+      cursor: pointer;
+      transition: all 0.1s ease;
+      letter-spacing: 0.01em;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background-color: #f0f4f8;
+      border-color: #1e3c5a;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      border-color: #d6dde3;
+    }
+
+    .nav-btn.primary {
+      background-color: #1e3c5a;
+      border-color: #1e3c5a;
+      color: #ffffff;
+    }
+
+    .nav-btn.primary:hover:not(:disabled) {
+      background-color: #0b2b4a;
+      border-color: #0b2b4a;
+    }
+
+    .result-screen {
+      text-align: center;
+      padding: 10px 0 6px;
+    }
+
+    .result-type {
+      font-size: 4.2rem;
+      font-weight: 700;
+      color: #0b2b4a;
+      letter-spacing: 2px;
+      line-height: 1.1;
+      margin-bottom: 18px;
+    }
+
+    .result-title {
+      font-size: 1.7rem;
+      font-weight: 500;
+      color: #1e3c5a;
+      margin-bottom: 14px;
+    }
+
+    .result-desc {
+      font-size: 1rem;
+      color: #3f5567;
+      line-height: 1.7;
+      margin-bottom: 38px;
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+      border-top: 1px solid #e0e0e0;
+      padding-top: 24px;
+    }
+
+    .restart-btn {
+      background-color: #ffffff;
+      border: 1.5px solid #1e3c5a;
+      border-radius: 40px;
+      padding: 14px 44px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #1e3c5a;
+      cursor: pointer;
+      transition: all 0.1s ease;
+    }
+
+    .restart-btn:hover {
+      background-color: #1e3c5a;
+      color: #ffffff;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 560px) {
+      .test-container {
+        padding: 28px 20px;
+      }
+      .question-text {
+        font-size: 1.25rem;
+        min-height: 70px;
+      }
+      .option-btn {
+        padding: 13px 16px;
+        font-size: 0.95rem;
+      }
+      .result-type {
+        font-size: 3rem;
+      }
+      .version-tab {
+        padding: 8px 18px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="test-container">
+    <h1>MBTI · 人格倾向</h1>
+    <div class="subhead">16型人格 · 三阶自我探索</div>
+
+    <div class="version-tabs">
+      <button class="version-tab active" data-version="40">极简版 <span class="badge">40题</span></button>
+      <button class="version-tab" data-version="100">普通版 <span class="badge">100题</span></button>
+      <button class="version-tab" data-version="200">深度思考版 <span class="badge">200题</span></button>
+    </div>
+
+    <div id="quizArea">
+      <div class="progress-area">
+        <span class="question-counter" id="counter">1 / 40</span>
+        <div class="progress-bar-bg">
+          <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <div class="question-text" id="questionText">正在加载...</div>
+
+      <div class="options" id="optionsContainer"></div>
+
+      <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" disabled>上一题</button>
+        <button class="nav-btn primary" id="nextBtn">下一题</button>
+      </div>
+    </div>
+
+    <div id="resultArea" class="result-screen hidden">
+      <div class="result-type" id="resultType">INFP</div>
+      <div class="result-title" id="resultTitle">调停者</div>
+      <div class="result-desc" id="resultDesc"></div>
+      <button class="restart-btn" id="restartBtn">重新测试</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const baseQuestions = [
+        { text: "在聚会中，你更倾向于：", options: [{ label: "主动认识很多人，享受热闹", value: "E" }, { label: "和几个熟人深入聊天", value: "I" }, { label: "观察大家，偶尔加入话题", value: "I" }, { label: "成为焦点，带动气氛", value: "E" }] },
+        { text: "面对一个新项目，你首先：", options: [{ label: "立刻动手，边做边调整", value: "S" }, { label: "先规划整体框架和可能性", value: "N" }, { label: "参考过往经验，按流程推进", value: "S" }, { label: "构思多种创意方案", value: "N" }] },
+        { text: "做决定时，你更看重：", options: [{ label: "逻辑分析和客观事实", value: "T" }, { label: "个人感受和对他人的影响", value: "F" }, { label: "公平的规则和效率", value: "T" }, { label: "人情世故和和谐关系", value: "F" }] },
+        { text: "你的日常安排更接近：", options: [{ label: "有计划、按部就班", value: "J" }, { label: "灵活随意、随性而发", value: "P" }, { label: "有大致框架，细节灵活", value: "J" }, { label: "走到哪算哪，享受随机", value: "P" }] },
+        { text: "当你要充电时，你更喜欢：", options: [{ label: "出门走走，和朋友相聚", value: "E" }, { label: "独自待着，安静地看书", value: "I" }, { label: "参加集体活动，感受氛围", value: "E" }, { label: "一个人散步或听音乐", value: "I" }] },
+        { text: "你更容易注意到：", options: [{ label: "具体的细节和现实情况", value: "S" }, { label: "隐藏的模式和未来的可能", value: "N" }, { label: "当下的实际问题和解决方式", value: "S" }, { label: "事物背后的深层含义", value: "N" }] },
+        { text: "面对冲突，你通常：", options: [{ label: "直接指出问题，就事论事", value: "T" }, { label: "考虑对方情绪，尽量温和", value: "F" }, { label: "用事实和逻辑说服对方", value: "T" }, { label: "先安抚情绪再沟通", value: "F" }] },
+        { text: "你的书桌/工作空间通常：", options: [{ label: "井井有条，物品分类清晰", value: "J" }, { label: "看起来有点乱，但自己找得到", value: "P" }, { label: "文件按项目归档", value: "J" }, { label: "东西随手放，需要时再翻", value: "P" }] },
+        { text: "你更享受哪种对话？", options: [{ label: "关于现实生活、具体经验", value: "S" }, { label: "关于抽象概念、未来设想", value: "N" }, { label: "探讨实际操作和步骤", value: "S" }, { label: "聊理想、哲学和可能性", value: "N" }] },
+        { text: "你更认同哪句话？", options: [{ label: "情感是决策中不可忽视的因素", value: "F" }, { label: "公平的规则比个人感受更重要", value: "T" }, { label: "理解他人的感受是首要的", value: "F" }, { label: "逻辑一致才是解决问题的关键", value: "T" }] },
+        { text: "旅行前，你通常会：", options: [{ label: "做好详细攻略，安排好行程", value: "J" }, { label: "订好机票住宿，其他随缘", value: "P" }, { label: "列出必去景点和时间表", value: "J" }, { label: "到了再说，享受即兴探索", value: "P" }] },
+        { text: "你觉得自己更偏向：", options: [{ label: "在人群中获得能量", value: "E" }, { label: "在独处中恢复精力", value: "I" }, { label: "喜欢热闹，但也需要独处", value: "E" }, { label: "社交后需要长时间安静", value: "I" }] },
+        { text: "你更容易记住：", options: [{ label: "具体的数字和事实", value: "S" }, { label: "整体的印象和感觉", value: "N" }, { label: "事件的细节和经过", value: "S" }, { label: "事情带来的启发和意义", value: "N" }] },
+        { text: "当朋友向你倾诉时，你倾向于：", options: [{ label: "帮他分析问题，给出方案", value: "T" }, { label: "先共情，让他感到被理解", value: "F" }, { label: "指出问题所在，理性建议", value: "T" }, { label: "耐心倾听，给予情感支持", value: "F" }] },
+        { text: "你更喜欢哪种工作环境？", options: [{ label: "有明确的流程和截止日期", value: "J" }, { label: "弹性工作，自由安排", value: "P" }, { label: "结构清晰，职责分明", value: "J" }, { label: "灵活多变，鼓励即兴", value: "P" }] },
+        { text: "在社交场合，你通常：", options: [{ label: "主动和陌生人打开话匣", value: "E" }, { label: "等别人来和你搭话", value: "I" }, { label: "很快融入群体，谈笑风生", value: "E" }, { label: "和少数人深入交流", value: "I" }] },
+        { text: "你更倾向于相信：", options: [{ label: "眼见为实，经验可靠", value: "S" }, { label: "直觉和灵感带来的启发", value: "N" }, { label: "经过验证的事实", value: "S" }, { label: "内心的预感与洞见", value: "N" }] },
+        { text: "你更看重一个人的：", options: [{ label: "能力和逻辑清晰度", value: "T" }, { label: "善良和情感细腻度", value: "F" }, { label: "公正和原则性", value: "T" }, { label: "同理心和包容度", value: "F" }] },
+        { text: "对于未完成的任务，你：", options: [{ label: "感到不安，想尽快完成", value: "J" }, { label: "觉得可以灵活处理，不着急", value: "P" }, { label: "会制定计划逐步完成", value: "J" }, { label: "先放一放，等状态好了再做", value: "P" }] },
+        { text: "你更常：", options: [{ label: "先行动，再思考", value: "E" }, { label: "先思考，再行动", value: "I" }, { label: "边做边说，享受互动", value: "E" }, { label: "想清楚再表达", value: "I" }] },
+        { text: "你更容易被什么说服？", options: [{ label: "数据和案例", value: "S" }, { label: "理念和愿景", value: "N" }, { label: "真实发生的事例", value: "S" }, { label: "富有想象力的蓝图", value: "N" }] },
+        { text: "你更愿意成为：", options: [{ label: "公正的裁判", value: "T" }, { label: "温暖的倾听者", value: "F" }, { label: "客观的分析者", value: "T" }, { label: "贴心的支持者", value: "F" }] },
+        { text: "你更喜欢做：", options: [{ label: "已经知道怎么做的事", value: "J" }, { label: "需要即兴发挥的事", value: "P" }, { label: "有明确步骤的任务", value: "J" }, { label: "充满变数的挑战", value: "P" }] },
+        { text: "独处时，你感到：", options: [{ label: "有时无聊，想找人说话", value: "E" }, { label: "非常自在，享受安静", value: "I" }, { label: "过一会儿就想联系朋友", value: "E" }, { label: "觉得是宝贵的休息时间", value: "I" }] },
+        { text: "你更关注：", options: [{ label: "当下正在发生的事", value: "S" }, { label: "未来可能发生的事", value: "N" }, { label: "眼前的实际问题", value: "S" }, { label: "长远的发展趋势", value: "N" }] },
+        { text: "当团队出现分歧，你更倾向于：", options: [{ label: "提出一个最理性的方案", value: "T" }, { label: "协调各方情绪，达成共识", value: "F" }, { label: "分析利弊，选出最优解", value: "T" }, { label: "照顾每个人的感受", value: "F" }] },
+        { text: "你更习惯：", options: [{ label: "提前做好计划", value: "J" }, { label: "随机应变", value: "P" }, { label: "列出待办事项清单", value: "J" }, { label: "根据当天状态调整", value: "P" }] },
+        { text: "你更愿意：", options: [{ label: "在热闹中寻找乐趣", value: "E" }, { label: "在安静中寻找深度", value: "I" }, { label: "参加聚会拓展人脉", value: "E" }, { label: "一个人读书或思考", value: "I" }] },
+        { text: "你更相信：", options: [{ label: "实践出真知", value: "S" }, { label: "想象力驱动世界", value: "N" }, { label: "亲身经历最可靠", value: "S" }, { label: "灵感比经验更重要", value: "N" }] },
+        { text: "你认为更重要的是：", options: [{ label: "公平", value: "T" }, { label: "仁慈", value: "F" }, { label: "规则面前人人平等", value: "T" }, { label: "体谅每个人的难处", value: "F" }] },
+        { text: "你更享受：", options: [{ label: "完成一个长期计划", value: "J" }, { label: "探索多个新的可能", value: "P" }, { label: "按部就班推进目标", value: "J" }, { label: "同时尝试不同方向", value: "P" }] },
+        { text: "你更容易：", options: [{ label: "在人群中感到兴奋", value: "E" }, { label: "在独处中恢复精力", value: "I" }, { label: "通过交流理清思路", value: "E" }, { label: "通过沉思获得答案", value: "I" }] },
+        { text: "你更依赖：", options: [{ label: "经验和事实", value: "S" }, { label: "灵感和直觉", value: "N" }, { label: "过去成功的做法", value: "S" }, { label: "内心的指引", value: "N" }] },
+        { text: "你更看重：", options: [{ label: "逻辑的严密性", value: "T" }, { label: "情感的真诚性", value: "F" }, { label: "论证是否合理", value: "T" }, { label: "是否发自内心", value: "F" }] },
+        { text: "你更倾向于：", options: [{ label: "按计划行事", value: "J" }, { label: "保持开放选项", value: "P" }, { label: "提前确定目标", value: "J" }, { label: "走一步看一步", value: "P" }] },
+        { text: "你更喜欢：", options: [{ label: "成为焦点", value: "E" }, { label: "做幕后的支持者", value: "I" }, { label: "在台前表达观点", value: "E" }, { label: "在背后默默付出", value: "I" }] },
+        { text: "你更容易注意到：", options: [{ label: "事物的实际用途", value: "S" }, { label: "事物背后的意义", value: "N" }, { label: "具体的使用方法", value: "S" }, { label: "象征和隐喻", value: "N" }] },
+        { text: "你更愿意：", options: [{ label: "用逻辑说服别人", value: "T" }, { label: "用情感打动别人", value: "F" }, { label: "摆事实讲道理", value: "T" }, { label: "讲故事引发共鸣", value: "F" }] },
+        { text: "你更享受：", options: [{ label: "按部就班的稳定", value: "J" }, { label: "灵活多变的自由", value: "P" }, { label: "清晰的规则和节奏", value: "J" }, { label: "随性的节奏和空间", value: "P" }] },
+        { text: "你更认同：", options: [{ label: "行动胜于言语", value: "E" }, { label: "思考胜于行动", value: "I" }, { label: "多交流才能碰撞火花", value: "E" }, { label: "安静思考才能深入", value: "I" }] }
+      ];
+
+      const typeDescriptions = {
+        INTJ: { title: "建筑师", desc: "富有想象力和战略性的思想家，一切皆在计划之中。独立、理性，善于洞察复杂系统的运作方式。" },
+        INTP: { title: "逻辑学家", desc: "具有创造力的发明家，对知识有着止不住的渴望。喜欢分析问题，探索事物背后的原理。" },
+        ENTJ: { title: "指挥官", desc: "大胆、富有想象力且意志强大的领导者，总能找到或创造解决方法。天生具有组织才能。" },
+        ENTP: { title: "辩论家", desc: "聪明好奇的思想者，不会放弃任何智力上的挑战。喜欢新观念，擅长即兴发挥。" },
+        INFJ: { title: "提倡者", desc: "安静而神秘，同时鼓舞人心且不知疲倦的理想主义者。有强烈的价值观，致力于帮助他人。" },
+        INFP: { title: "调停者", desc: "诗意、善良的利他主义者，总是热情地为正当理由提供帮助。内心丰富，重视真实与和谐。" },
+        ENFJ: { title: "主人公", desc: "富有魅力、鼓舞人心的领导者，有使听众着迷的能力。善于理解他人，追求共同成长。" },
+        ENFP: { title: "竞选者", desc: "热情、有创造力、爱社交的自由灵魂，总能找到理由微笑。好奇心强，乐于探索新可能。" },
+        ISTJ: { title: "物流师", desc: "实际且注重事实的个人，可靠性不容怀疑。喜欢秩序，尊重规则，做事有条不紊。" },
+        ISFJ: { title: "守卫者", desc: "非常专注而温暖的守护者，时刻准备着保护爱着的人们。细心、负责，重视传统。" },
+        ESTJ: { title: "总经理", desc: "出色的管理者，在管理事情或人方面无与伦比。务实、果断，重视效率与结构。" },
+        ESFJ: { title: "执政官", desc: "极有同情心、爱交际、受欢迎的人们，总是热心提供帮助。重视和谐，乐于服务他人。" },
+        ISTP: { title: "鉴赏家", desc: "大胆而实际的实验家，擅长使用任何形式的工具。冷静灵活，喜欢通过实践解决问题。" },
+        ISFP: { title: "探险家", desc: "灵活有魅力的艺术家，时刻准备着探索和体验新鲜事物。温柔敏感，活在当下。" },
+        ESTP: { title: "企业家", desc: "聪明、精力充沛、善于感知的人，真心享受生活在边缘。行动派，擅长应对挑战。" },
+        ESFP: { title: "表演者", desc: "自发的、精力充沛而热情的表演者——生活在他们周围永不无聊。热爱生活，感染力强。" }
+      };
+
+      function buildQuestionPool(targetCount) {
+        const pool = [];
+        const baseLen = baseQuestions.length;
+        for (let i = 0; i < targetCount; i++) {
+          const q = baseQuestions[i % baseLen];
+          const round = Math.floor(i / baseLen);
+          let text = q.text;
+          if (round === 1) {
+            text = q.text.replace("你", "你通常") + "（情境B）";
+          } else if (round === 2) {
+            text = "换个角度：" + q.text.replace("你", "你大部分时候") + "（情境C）";
+          } else if (round === 3) {
+            text = "深入思考：" + q.text.replace("你", "你内心深处") + "（情境D）";
+          } else if (round === 4) {
+            text = "再次确认：" + q.text.replace("你", "你本能地") + "（情境E）";
+          } else if (round > 4) {
+            text = q.text.replace("你", "在类似情境下，你") + "（第" + (round + 1) + "轮）";
+          }
+          const newQ = {
+            text: text,
+            options: q.options.map(opt => ({ label: opt.label, value: opt.value }))
+          };
+          pool.push(newQ);
+        }
+        return pool;
+      }
+
+      let currentVersion = 40;
+      let questions = buildQuestionPool(40);
+      let currentQuestionIndex = 0;
+      let answers = new Array(questions.length).fill(null);
+
+      const quizArea = document.getElementById('quizArea');
+      const resultArea = document.getElementById('resultArea');
+      const counter = document.getElementById('counter');
+      const progressFill = document.getElementById('progressFill');
+      const questionText = document.getElementById('questionText');
+      const optionsContainer = document.getElementById('optionsContainer');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const resultType = document.getElementById('resultType');
+      const resultTitle = document.getElementById('resultTitle');
+      const resultDesc = document.getElementById('resultDesc');
+      const restartBtn = document.getElementById('restartBtn');
+      const versionTabs = document.querySelectorAll('.version-tab');
+
+      function resetState(version) {
+        currentVersion = version;
+        questions = buildQuestionPool(version);
+        currentQuestionIndex = 0;
+        answers = new Array(questions.length).fill(null);
+        quizArea.classList.remove('hidden');
+        resultArea.classList.add('hidden');
+        versionTabs.forEach(tab => {
+          tab.classList.toggle('active', parseInt(tab.dataset.version) === version);
+        });
+        renderQuestion();
+      }
+
+      function updateProgress() {
+        const total = questions.length;
+        const answered = answers.filter(a => a !== null).length;
+        const percent = (answered / total) * 100;
+        progressFill.style.width = percent + '%';
+        counter.textContent = (currentQuestionIndex + 1) + ' / ' + total;
+      }
+
+      function renderQuestion() {
+        const q = questions[currentQuestionIndex];
+        questionText.textContent = q.text;
+
+        const savedAnswer = answers[currentQuestionIndex];
+        optionsContainer.innerHTML = '';
+
+        q.options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          if (savedAnswer !== null && savedAnswer === opt.value) {
+            btn.classList.add('selected');
+          }
+          btn.innerHTML = `<span class="option-letter">${String.fromCharCode(65 + idx)}</span>${opt.label}`;
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            answers[currentQuestionIndex] = opt.value;
+            updateProgress();
+            updateNavButtons();
+          });
+          optionsContainer.appendChild(btn);
+        });
+
+        updateProgress();
+        updateNavButtons();
+      }
+
+      function updateNavButtons() {
+        prevBtn.disabled = currentQuestionIndex === 0;
+
+        if (currentQuestionIndex === questions.length - 1) {
+          nextBtn.textContent = '查看结果';
+        } else {
+          nextBtn.textContent = '下一题';
+        }
+
+        const hasAnswer = answers[currentQuestionIndex] !== null;
+        if (!hasAnswer && currentQuestionIndex < questions.length - 1) {
+          nextBtn.disabled = true;
+        } else {
+          nextBtn.disabled = false;
+        }
+
+        if (currentQuestionIndex === questions.length - 1 && !hasAnswer) {
+          nextBtn.disabled = false;
+        }
+      }
+
+      function goToNext() {
+        if (currentQuestionIndex < questions.length - 1) {
+          if (answers[currentQuestionIndex] === null) {
+            return;
+          }
+          currentQuestionIndex++;
+          renderQuestion();
+        } else {
+          showResult();
+        }
+      }
+
+      function goToPrev() {
+        if (currentQuestionIndex > 0) {
+          currentQuestionIndex--;
+          renderQuestion();
+        }
+      }
+
+      function calculateType() {
+        const counts = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+        answers.forEach((val) => {
+          if (val && counts.hasOwnProperty(val)) {
+            counts[val]++;
+          }
+        });
+
+        const e = counts.E >= counts.I ? 'E' : 'I';
+        const s = counts.S >= counts.N ? 'S' : 'N';
+        const t = counts.T >= counts.F ? 'T' : 'F';
+        const j = counts.J >= counts.P ? 'J' : 'P';
+
+        return e + s + t + j;
+      }
+
+      function showResult() {
+        if (answers.some(a => a === null)) {
+          for (let i = 0; i < answers.length; i++) {
+            if (answers[i] === null) {
+              currentQuestionIndex = i;
+              renderQuestion();
+              return;
+            }
+          }
+        }
+
+        const type = calculateType();
+        const info = typeDescriptions[type] || { title: '探索者', desc: '独特的人格组合，拥有自己的光芒。' };
+
+        resultType.textContent = type;
+        resultTitle.textContent = info.title;
+        resultDesc.textContent = info.desc;
+
+        quizArea.classList.add('hidden');
+        resultArea.classList.remove('hidden');
+      }
+
+      function restartTest() {
+        currentQuestionIndex = 0;
+        answers = new Array(questions.length).fill(null);
+        resultArea.classList.add('hidden');
+        quizArea.classList.remove('hidden');
+        renderQuestion();
+      }
+
+      versionTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const version = parseInt(tab.dataset.version);
+          if (version !== currentVersion) {
+            resetState(version);
+          }
+        });
+      });
+
+      nextBtn.addEventListener('click', goToNext);
+      prevBtn.addEventListener('click', goToPrev);
+      restartBtn.addEventListener('click', restartTest);
+
+      resetState(40);
+    })();
+  </script>
+</body>
+</html>
